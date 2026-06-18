@@ -1,0 +1,27 @@
+{
+  "name": "rpg-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "//": "IMPORTANT: Create a .env file in the project root and add: VITE_RESUME_PASSWORD=INIT_ZETA23R0",
+  "dependencies": {
+    "framer-motion": "^12.40.0",
+    "lucide-react": "^1.18.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^5.7.3",
+    "vite": "^8.0.16"
+  }
+}
