@@ -37,9 +37,15 @@ type Skill = {
   position?: { x: number; y: number }
 }
 
-// Map skills across all journey milestones with prerequisite branches
+// Flowchart-style positioning constants
+const NODE_WIDTH = 100
+const NODE_HEIGHT = 100
+const H_GAP = 50  // Horizontal gap between nodes in same row
+const V_GAP = 140  // Vertical gap between rows
+
+// Map skills with flowchart positions
 const SKILL_TREE: Skill[] = [
-  // Frontend Branch (y: 0-1)
+  // FRONTEND BRANCH (row 0)
   {
     id: "html-css",
     name: "HTML/CSS",
@@ -62,7 +68,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2017,
     prerequisites: ["html-css"],
-    position: { x: 1, y: 0 },
+    position: { x: 2, y: 0 },
   },
   {
     id: "react",
@@ -74,8 +80,10 @@ const SKILL_TREE: Skill[] = [
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["javascript"],
-    position: { x: 2, y: 0 },
+    position: { x: 4, y: 0 },
   },
+  
+  // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
   {
     id: "tailwindcss",
     name: "Tailwind CSS",
@@ -89,7 +97,7 @@ const SKILL_TREE: Skill[] = [
     position: { x: 2, y: 1 },
   },
 
-  // Backend Branch (y: 2.5-3)
+  // BACKEND BRANCH (row 2)
   {
     id: "php",
     name: "PHP",
@@ -100,84 +108,8 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0, y: 2.5 },
+    position: { x: 0, y: 2 },
   },
-  {
-    id: "mysql",
-    name: "MySQL/Database",
-    icon: Database,
-    category: "backend",
-    proficiency: "advanced",
-    experience: "Since 2015 — 8 years",
-    projects: ["ICCES", "Private Server"],
-    yearIntroduced: 2015,
-    prerequisites: [],
-    position: { x: 1, y: 2.5 },
-  },
-  {
-    id: "authentication",
-    name: "Auth Systems",
-    icon: Shield,
-    category: "backend",
-    proficiency: "intermediate",
-    experience: "Since 2020 — 5 years",
-    projects: ["ICCES"],
-    yearIntroduced: 2020,
-    prerequisites: ["php", "mysql"],
-    position: { x: 2, y: 2.5 },
-  },
-
-  // Game Development Branch (y: 4.5-5.5)
-  {
-    id: "csharp",
-    name: "C#",
-    icon: Code,
-    category: "game",
-    proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
-    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
-    yearIntroduced: 2021,
-    prerequisites: [],
-    position: { x: 0, y: 4.5 },
-  },
-  {
-    id: "unity",
-    name: "Unity",
-    icon: Gamepad2,
-    category: "game",
-    proficiency: "expert",
-    experience: "Since 2021 — 4 years",
-    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
-    yearIntroduced: 2021,
-    prerequisites: ["csharp"],
-    position: { x: 1, y: 4.5 },
-  },
-  {
-    id: "2d-game-dev",
-    name: "2D Game Dev",
-    icon: Monitor,
-    category: "game",
-    proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
-    projects: ["Esco Slot Pharmachine"],
-    yearIntroduced: 2021,
-    prerequisites: ["unity"],
-    position: { x: 1, y: 5.5 },
-  },
-  {
-    id: "3d-graphics",
-    name: "3D Graphics",
-    icon: Layers,
-    category: "game",
-    proficiency: "intermediate",
-    experience: "Since 2022 — 3 years",
-    projects: ["Cell Processing Isolator 3D"],
-    yearIntroduced: 2022,
-    prerequisites: ["unity"],
-    position: { x: 2, y: 5.5 },
-  },
-
-  // System & Infrastructure Branch (y: 7-7.5)
   {
     id: "xampp",
     name: "XAMPP/Local Server",
@@ -188,7 +120,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0, y: 7 },
+    position: { x: 2, y: 2 },
   },
   {
     id: "port-forwarding",
@@ -200,8 +132,100 @@ const SKILL_TREE: Skill[] = [
     projects: ["Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["xampp"],
-    position: { x: 1, y: 7 },
+    position: { x: 4, y: 2 },
   },
+
+  // BACKEND BRANCH - DB ROW (row 3, below PHP/XAMPP)
+  {
+    id: "mysql",
+    name: "MySQL/Database",
+    icon: Database,
+    category: "backend",
+    proficiency: "advanced",
+    experience: "Since 2015 — 8 years",
+    projects: ["ICCES", "Private Server"],
+    yearIntroduced: 2015,
+    prerequisites: [],
+    position: { x: 2, y: 3 },
+  },
+  {
+    id: "authentication",
+    name: "Auth Systems",
+    icon: Shield,
+    category: "backend",
+    proficiency: "intermediate",
+    experience: "Since 2020 — 5 years",
+    projects: ["ICCES"],
+    yearIntroduced: 2020,
+    prerequisites: ["php", "mysql"],
+    position: { x: 4, y: 3 },
+  },
+
+  // GAME DEV BRANCH (row 4)
+  {
+    id: "csharp",
+    name: "C#",
+    icon: Code,
+    category: "game",
+    proficiency: "advanced",
+    experience: "Since 2021 — 4 years",
+    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
+    yearIntroduced: 2021,
+    prerequisites: [],
+    position: { x: 0, y: 4 },
+  },
+  {
+    id: "unity",
+    name: "Unity ENGINE",
+    icon: Gamepad2,
+    category: "game",
+    proficiency: "expert",
+    experience: "Since 2021 — 4 years",
+    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
+    yearIntroduced: 2021,
+    prerequisites: ["csharp"],
+    position: { x: 2, y: 4 },
+  },
+  {
+    id: "2d-game-dev",
+    name: "2D",
+    icon: Monitor,
+    category: "game",
+    proficiency: "advanced",
+    experience: "Since 2021 — 4 years",
+    projects: ["Esco Slot Pharmachine"],
+    yearIntroduced: 2021,
+    prerequisites: ["unity"],
+    position: { x: 4, y: 4 },
+  },
+
+  // GAME DEV BRANCH - 3D/ANDROID (row 5, below Unity/2D)
+  {
+    id: "3d-graphics",
+    name: "3D",
+    icon: Layers,
+    category: "game",
+    proficiency: "intermediate",
+    experience: "Since 2022 — 3 years",
+    projects: ["Cell Processing Isolator 3D"],
+    yearIntroduced: 2022,
+    prerequisites: ["unity"],
+    position: { x: 2, y: 5 },
+  },
+  {
+    id: "android",
+    name: "Android",
+    icon: Smartphone,
+    category: "tools",
+    proficiency: "intermediate",
+    experience: "Since 2022 — 3 years",
+    projects: ["Esco Slot Pharmachine"],
+    yearIntroduced: 2022,
+    prerequisites: ["unity"],
+    position: { x: 4, y: 5 },
+  },
+
+  // SYSTEM BRANCH (row 6)
   {
     id: "pc-hardware",
     name: "PC Hardware",
@@ -212,22 +236,10 @@ const SKILL_TREE: Skill[] = [
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
     prerequisites: [],
-    position: { x: 2, y: 7 },
+    position: { x: 0, y: 6 },
   },
 
-  // Tools & Design Branch (y: 8.5-9)
-  {
-    id: "git",
-    name: "Git/GitHub",
-    icon: GitBranch,
-    category: "tools",
-    proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
-    projects: ["All Projects"],
-    yearIntroduced: 2021,
-    prerequisites: [],
-    position: { x: 0, y: 8.5 },
-  },
+  // TOOLS & DESIGN BRANCH (row 7)
   {
     id: "modding",
     name: "Game Modding",
@@ -238,31 +250,19 @@ const SKILL_TREE: Skill[] = [
     projects: ["Minecraft Mods", "Cryofall"],
     yearIntroduced: 2017,
     prerequisites: ["csharp"],
-    position: { x: 1, y: 8.5 },
+    position: { x: 0, y: 7 },
   },
   {
-    id: "android",
-    name: "Android Dev",
-    icon: Smartphone,
+    id: "git",
+    name: "Git/GitHub",
+    icon: GitBranch,
     category: "tools",
-    proficiency: "intermediate",
-    experience: "Since 2022 — 3 years",
-    projects: ["Esco Slot Pharmachine"],
-    yearIntroduced: 2022,
-    prerequisites: ["unity"],
-    position: { x: 2, y: 8.5 },
-  },
-  {
-    id: "adobe-tools",
-    name: "Adobe Flash",
-    icon: Palette,
-    category: "design",
-    proficiency: "intermediate",
-    experience: "Since 2019 — 6 years",
-    projects: ["Animation Competition"],
-    yearIntroduced: 2019,
+    proficiency: "advanced",
+    experience: "Since 2021 — 4 years",
+    projects: ["All Projects"],
+    yearIntroduced: 2021,
     prerequisites: [],
-    position: { x: 0, y: 9 },
+    position: { x: 2, y: 7 },
   },
   {
     id: "3d-printing",
@@ -274,7 +274,19 @@ const SKILL_TREE: Skill[] = [
     projects: ["Resin Printing"],
     yearIntroduced: 2024,
     prerequisites: [],
-    position: { x: 1, y: 9 },
+    position: { x: 4, y: 7 },
+  },
+  {
+    id: "adobe-tools",
+    name: "Adobe Flash",
+    icon: Palette,
+    category: "design",
+    proficiency: "intermediate",
+    experience: "Since 2019 — 6 years",
+    projects: ["Animation Competition"],
+    yearIntroduced: 2019,
+    prerequisites: [],
+    position: { x: 6, y: 7 },
   },
 ]
 
@@ -286,11 +298,11 @@ const BRANCHES: Array<{
   yStart: number
   yEnd: number
 }> = [
-  { name: "FRONTEND", category: "frontend", color: "#00d9ff", yStart: 0, yEnd: 1.5 },
-  { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 2.2, yEnd: 3.2 },
-  { name: "GAME DEV", category: "game", color: "#ffbe0b", yStart: 4.2, yEnd: 6 },
-  { name: "SYSTEM", category: "system", color: "#00d9ff", yStart: 6.7, yEnd: 7.5 },
-  { name: "TOOLS & DESIGN", category: "tools", color: "#ffbe0b", yStart: 8.2, yEnd: 9.3 },
+  { name: "FRONTEND", category: "frontend", color: "#00d9ff", yStart: -0.5, yEnd: 1.5 },
+  { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.7, yEnd: 3.7 },
+  { name: "GAME DEV", category: "game", color: "#ffbe0b", yStart: 3.9, yEnd: 5.7 },
+  { name: "SYSTEM", category: "system", color: "#00d9ff", yStart: 5.9, yEnd: 6.5 },
+  { name: "TOOLS & DESIGN", category: "tools", color: "#ffbe0b", yStart: 6.7, yEnd: 7.7 },
 ]
 
 const CATEGORY_INFO = {
@@ -309,9 +321,9 @@ const PROFICIENCY_MAP = {
   expert: { label: "Expert", width: 100, color: "rgba(255, 255, 255, 1)" },
 }
 
-const NODE_SIZE = 80
-const GRID_SPACING_X = 115
-const GRID_SPACING_Y = 110
+// Spacing for flowchart layout
+const GRID_X = 150  // Horizontal grid unit (NODE_WIDTH + H_GAP)
+const GRID_Y = 150  // Vertical grid unit (NODE_HEIGHT + V_GAP)
 
 export default function SkillTree() {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
@@ -384,17 +396,17 @@ export default function SkillTree() {
         ▼ BRANCHING NEURAL MATRIX
       </h3>
 
-      {/* Branching Tree Container */}
+      {/* Flowchart Tree Container */}
       <div className="relative overflow-x-auto pb-4">
-        <div className="relative" style={{ minWidth: "max-content", minHeight: "1050px" }}>
+        <div className="relative" style={{ minWidth: "max-content", minHeight: "1200px" }}>
           {/* Branch Separators and Labels */}
           {BRANCHES.map((branch, idx) => (
-            <div key={branch.name} className="absolute w-full pointer-events-none" style={{ top: `${branch.yStart * GRID_SPACING_Y}px`, height: `${(branch.yEnd - branch.yStart) * GRID_SPACING_Y}px` }}>
+            <div key={branch.name} className="absolute w-full pointer-events-none" style={{ top: `${branch.yStart * GRID_Y}px`, height: `${(branch.yEnd - branch.yStart) * GRID_Y}px` }}>
               {/* Branch Background */}
               <div className="absolute inset-0 opacity-5" style={{ background: branch.color }} />
               
               {/* Branch Label */}
-              <div className="absolute left-0 top-0 px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest" style={{ color: branch.color, textShadow: `0 0 8px ${branch.color}88` }}>
+              <div className="absolute left-0 top-2 px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest" style={{ color: branch.color, textShadow: `0 0 8px ${branch.color}88` }}>
                 {branch.name}
               </div>
 
@@ -410,12 +422,12 @@ export default function SkillTree() {
             </div>
           ))}
 
-          {/* Connection Lines SVG */}
+          {/* Connection Lines SVG - Straight bars and vertical drops */}
           <svg
             ref={svgRef}
             className="absolute top-0 left-0 pointer-events-none"
             width="100%"
-            height="1050"
+            height="1200"
             style={{ filter: "drop-shadow(0 0 8px rgba(46, 230, 230, 0.3))" }}
           >
             <defs>
@@ -429,38 +441,61 @@ export default function SkillTree() {
                 <path d="M0,0 L0,6 L9,3 z" fill="#f5c451" opacity="0.6" />
               </marker>
             </defs>
-            {/* Draw connection lines */}
+            {/* Draw straight connection bars (horizontal and vertical) */}
             {SKILL_TREE.map((skill) => {
               if (!skill.prerequisites || skill.prerequisites.length === 0) return null
               return skill.prerequisites.map((prereqId) => {
                 const prereqSkill = skillMap.get(prereqId)
                 if (!prereqSkill || !skill.position || !prereqSkill.position) return null
 
-                const fromX = prereqSkill.position.x * GRID_SPACING_X + NODE_SIZE / 2 + 20
-                const fromY = prereqSkill.position.y * GRID_SPACING_Y + NODE_SIZE / 2 + 20
-                const toX = skill.position.x * GRID_SPACING_X + NODE_SIZE / 2 + 20
-                const toY = skill.position.y * GRID_SPACING_Y + NODE_SIZE / 2 + 20
+                const fromX = prereqSkill.position.x * GRID_X + NODE_WIDTH / 2
+                const fromY = prereqSkill.position.y * GRID_Y + NODE_HEIGHT / 2
+                const toX = skill.position.x * GRID_X + NODE_WIDTH / 2
+                const toY = skill.position.y * GRID_Y + NODE_HEIGHT / 2
 
                 const isHighlighted = highlightedIds.has(skill.id) || highlightedIds.has(prereqId)
-                const lineColor = highlightedIds.size > 0 && !isHighlighted ? "rgba(46, 230, 230, 0.1)" : getSkillColor(prereqSkill)
+                const lineColor = highlightedIds.size > 0 && !isHighlighted ? "rgba(46, 230, 230, 0.15)" : getSkillColor(prereqSkill)
+                const strokeWidth = highlightedIds.size > 0 && isHighlighted ? 8 : 6
 
-                return (
-                  <path
-                    key={`${prereqId}-${skill.id}`}
-                    d={`M ${fromX} ${fromY} Q ${(fromX + toX) / 2} ${(fromY + toY) / 2 + 30} ${toX} ${toY}`}
-                    stroke={lineColor}
-                    strokeWidth={highlightedIds.size > 0 && isHighlighted ? 2.5 : 1.5}
-                    fill="none"
-                    className={isHighlighted ? "branch-line" : ""}
-                    markerEnd={`url(#${lineColor === "#2ee6e6" || lineColor === "rgba(46, 230, 230, 0.1)" ? "arrowCyan" : lineColor === "#a974ff" ? "arrowPurple" : "arrowGold"})`}
-                  />
-                )
+                // Calculate connection path: horizontal from source, vertical to target, horizontal to destination
+                const midX = (fromX + toX) / 2
+
+                if (skill.position.y === prereqSkill.position.y) {
+                  // Same row - straight horizontal line
+                  return (
+                    <line
+                      key={`${prereqId}-${skill.id}`}
+                      x1={fromX}
+                      y1={fromY}
+                      x2={toX}
+                      y2={toY}
+                      stroke={lineColor}
+                      strokeWidth={strokeWidth}
+                      className={isHighlighted ? "branch-line" : ""}
+                    />
+                  )
+                } else {
+                  // Different rows - L-shaped path (horizontal then vertical)
+                  const pathData = `M ${fromX} ${fromY} L ${toX} ${fromY} L ${toX} ${toY}`
+                  return (
+                    <path
+                      key={`${prereqId}-${skill.id}`}
+                      d={pathData}
+                      stroke={lineColor}
+                      strokeWidth={strokeWidth}
+                      fill="none"
+                      className={isHighlighted ? "branch-line" : ""}
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
+                    />
+                  )
+                }
               })
             })}
           </svg>
 
           {/* Skill Nodes */}
-          <div className="relative" style={{ height: "1050px" }}>
+          <div className="relative" style={{ height: "1200px" }}>
             {SKILL_TREE.map((skill, idx) => {
               if (!skill.position) return null
               const isLocked = isSkillLocked(skill, skillMap)
@@ -480,10 +515,10 @@ export default function SkillTree() {
                   transition={{ delay: idx * 0.05, duration: 0.4 }}
                   className="cyber-node-active absolute group overflow-hidden transition-all duration-300"
                   style={{
-                    left: `${skill.position.x * GRID_SPACING_X}px`,
-                    top: `${skill.position.y * GRID_SPACING_Y}px`,
-                    width: `${NODE_SIZE}px`,
-                    height: `${NODE_SIZE}px`,
+                    left: `${skill.position.x * GRID_X}px`,
+                    top: `${skill.position.y * GRID_Y}px`,
+                    width: `${NODE_WIDTH}px`,
+                    height: `${NODE_HEIGHT}px`,
                     border: `2px solid ${catInfo.color}`,
                     background: isLocked 
                       ? "radial-gradient(circle at 30% 30%, rgba(100,80,100,0.6), rgba(40,40,60,0.8))"
