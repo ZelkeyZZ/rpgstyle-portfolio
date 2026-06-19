@@ -126,7 +126,7 @@ const SKILL_TREE: Skill[] = [
     id: "xampp",
     name: "XAMPP/Local Server",
     icon: Server,
-    category: "system",
+    category: "backend",
     proficiency: "advanced",
     experience: "Since 2015 — 8 years",
     projects: ["ICCES", "Private Server"],
@@ -138,7 +138,7 @@ const SKILL_TREE: Skill[] = [
     id: "port-forwarding",
     name: "Port Forwarding",
     icon: Network,
-    category: "system",
+    category: "backend",
     proficiency: "intermediate",
     experience: "Since 2015 — 10 years",
     projects: ["Private Server"],
@@ -170,7 +170,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES"],
     yearIntroduced: 2020,
     prerequisites: ["php", "mysql"],
-    position: { x: 4, y: 3 },
+    position: { x: 3.5, y: 3 },
   },
 
   // GAME DEV BRANCH (row 4)
@@ -261,7 +261,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2017 — 8 years",
     projects: ["Minecraft Mods", "Cryofall"],
     yearIntroduced: 2017,
-    prerequisites: ["csharp"],
+    prerequisites: [],
     position: { x: 0, y: 7 },
   },
   {
