@@ -39,7 +39,7 @@ type Skill = {
 
 // Map skills across all journey milestones with prerequisite branches
 const SKILL_TREE: Skill[] = [
-  // Frontend Branch
+  // Frontend Branch (y: 0-1)
   {
     id: "html-css",
     name: "HTML/CSS",
@@ -89,7 +89,7 @@ const SKILL_TREE: Skill[] = [
     position: { x: 2, y: 1 },
   },
 
-  // Backend Branch
+  // Backend Branch (y: 2.5-3)
   {
     id: "php",
     name: "PHP",
@@ -100,7 +100,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0, y: 3 },
+    position: { x: 0, y: 2.5 },
   },
   {
     id: "mysql",
@@ -112,7 +112,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 1, y: 3 },
+    position: { x: 1, y: 2.5 },
   },
   {
     id: "authentication",
@@ -124,10 +124,10 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES"],
     yearIntroduced: 2020,
     prerequisites: ["php", "mysql"],
-    position: { x: 2, y: 3 },
+    position: { x: 2, y: 2.5 },
   },
 
-  // Game Development Branch
+  // Game Development Branch (y: 4.5-5.5)
   {
     id: "csharp",
     name: "C#",
@@ -138,7 +138,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2021,
     prerequisites: [],
-    position: { x: 0, y: 6 },
+    position: { x: 0, y: 4.5 },
   },
   {
     id: "unity",
@@ -150,7 +150,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2021,
     prerequisites: ["csharp"],
-    position: { x: 1, y: 6 },
+    position: { x: 1, y: 4.5 },
   },
   {
     id: "2d-game-dev",
@@ -162,7 +162,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine"],
     yearIntroduced: 2021,
     prerequisites: ["unity"],
-    position: { x: 1, y: 7 },
+    position: { x: 1, y: 5.5 },
   },
   {
     id: "3d-graphics",
@@ -174,10 +174,10 @@ const SKILL_TREE: Skill[] = [
     projects: ["Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
     prerequisites: ["unity"],
-    position: { x: 2, y: 7 },
+    position: { x: 2, y: 5.5 },
   },
 
-  // System & Infrastructure Branch
+  // System & Infrastructure Branch (y: 7-7.5)
   {
     id: "xampp",
     name: "XAMPP/Local Server",
@@ -188,7 +188,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0, y: 9 },
+    position: { x: 0, y: 7 },
   },
   {
     id: "port-forwarding",
@@ -200,7 +200,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["xampp"],
-    position: { x: 1, y: 9 },
+    position: { x: 1, y: 7 },
   },
   {
     id: "pc-hardware",
@@ -212,21 +212,21 @@ const SKILL_TREE: Skill[] = [
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
     prerequisites: [],
-    position: { x: 2, y: 9 },
+    position: { x: 2, y: 7 },
   },
 
-  // Design & Tools Branch
+  // Tools & Design Branch (y: 8.5-9)
   {
-    id: "adobe-tools",
-    name: "Adobe Flash",
-    icon: Palette,
-    category: "design",
-    proficiency: "intermediate",
-    experience: "Since 2019 — 6 years",
-    projects: ["Animation Competition"],
-    yearIntroduced: 2019,
+    id: "git",
+    name: "Git/GitHub",
+    icon: GitBranch,
+    category: "tools",
+    proficiency: "advanced",
+    experience: "Since 2021 — 4 years",
+    projects: ["All Projects"],
+    yearIntroduced: 2021,
     prerequisites: [],
-    position: { x: 0, y: 12 },
+    position: { x: 0, y: 8.5 },
   },
   {
     id: "modding",
@@ -238,19 +238,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Minecraft Mods", "Cryofall"],
     yearIntroduced: 2017,
     prerequisites: ["csharp"],
-    position: { x: 1, y: 12 },
-  },
-  {
-    id: "git",
-    name: "Git/GitHub",
-    icon: GitBranch,
-    category: "tools",
-    proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
-    projects: ["All Projects"],
-    yearIntroduced: 2021,
-    prerequisites: [],
-    position: { x: 2, y: 12 },
+    position: { x: 1, y: 8.5 },
   },
   {
     id: "android",
@@ -262,7 +250,19 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine"],
     yearIntroduced: 2022,
     prerequisites: ["unity"],
-    position: { x: 3, y: 12 },
+    position: { x: 2, y: 8.5 },
+  },
+  {
+    id: "adobe-tools",
+    name: "Adobe Flash",
+    icon: Palette,
+    category: "design",
+    proficiency: "intermediate",
+    experience: "Since 2019 — 6 years",
+    projects: ["Animation Competition"],
+    yearIntroduced: 2019,
+    prerequisites: [],
+    position: { x: 0, y: 9 },
   },
   {
     id: "3d-printing",
@@ -274,8 +274,23 @@ const SKILL_TREE: Skill[] = [
     projects: ["Resin Printing"],
     yearIntroduced: 2024,
     prerequisites: [],
-    position: { x: 4, y: 12 },
+    position: { x: 1, y: 9 },
   },
+]
+
+// Branch information for visual grouping
+const BRANCHES: Array<{
+  name: string
+  category: string
+  color: string
+  yStart: number
+  yEnd: number
+}> = [
+  { name: "FRONTEND", category: "frontend", color: "#00d9ff", yStart: 0, yEnd: 1.5 },
+  { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 2.2, yEnd: 3.2 },
+  { name: "GAME DEV", category: "game", color: "#ffbe0b", yStart: 4.2, yEnd: 6 },
+  { name: "SYSTEM", category: "system", color: "#00d9ff", yStart: 6.7, yEnd: 7.5 },
+  { name: "TOOLS & DESIGN", category: "tools", color: "#ffbe0b", yStart: 8.2, yEnd: 9.3 },
 ]
 
 const CATEGORY_INFO = {
@@ -294,9 +309,9 @@ const PROFICIENCY_MAP = {
   expert: { label: "Expert", width: 100, color: "rgba(255, 255, 255, 1)" },
 }
 
-const NODE_SIZE = 100
-const GRID_SPACING_X = 140
-const GRID_SPACING_Y = 160
+const NODE_SIZE = 80
+const GRID_SPACING_X = 115
+const GRID_SPACING_Y = 110
 
 export default function SkillTree() {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
@@ -371,13 +386,36 @@ export default function SkillTree() {
 
       {/* Branching Tree Container */}
       <div className="relative overflow-x-auto pb-4">
-        <div className="relative" style={{ minWidth: "max-content", minHeight: "900px" }}>
+        <div className="relative" style={{ minWidth: "max-content", minHeight: "1050px" }}>
+          {/* Branch Separators and Labels */}
+          {BRANCHES.map((branch, idx) => (
+            <div key={branch.name} className="absolute w-full pointer-events-none" style={{ top: `${branch.yStart * GRID_SPACING_Y}px`, height: `${(branch.yEnd - branch.yStart) * GRID_SPACING_Y}px` }}>
+              {/* Branch Background */}
+              <div className="absolute inset-0 opacity-5" style={{ background: branch.color }} />
+              
+              {/* Branch Label */}
+              <div className="absolute left-0 top-0 px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest" style={{ color: branch.color, textShadow: `0 0 8px ${branch.color}88` }}>
+                {branch.name}
+              </div>
+
+              {/* Branch Divider Line */}
+              {idx < BRANCHES.length - 1 && (
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-px"
+                  style={{
+                    background: `linear-gradient(90deg, ${branch.color}44, transparent)`,
+                  }}
+                />
+              )}
+            </div>
+          ))}
+
           {/* Connection Lines SVG */}
           <svg
             ref={svgRef}
             className="absolute top-0 left-0 pointer-events-none"
             width="100%"
-            height="900"
+            height="1050"
             style={{ filter: "drop-shadow(0 0 8px rgba(46, 230, 230, 0.3))" }}
           >
             <defs>
@@ -422,7 +460,7 @@ export default function SkillTree() {
           </svg>
 
           {/* Skill Nodes */}
-          <div className="relative" style={{ height: "900px" }}>
+          <div className="relative" style={{ height: "1050px" }}>
             {SKILL_TREE.map((skill, idx) => {
               if (!skill.position) return null
               const isLocked = isSkillLocked(skill, skillMap)
