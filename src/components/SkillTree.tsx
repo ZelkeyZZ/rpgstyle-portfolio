@@ -314,15 +314,15 @@ const BRANCHES: Array<{
   { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.7, yEnd: 3.7 },
   { name: "GAME DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
   { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.9, yEnd: 6.5 },
-  { name: "TOOLS & DESIGN", category: "tools", color: "#ffbe0b", yStart: 6.7, yEnd: 7.7 },
+  { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 6.7, yEnd: 7.7 },
 ]
 
 const CATEGORY_INFO = {
-  frontend: { label: "Frontend", color: "#00d9ff" },
+  frontend: { label: "Frontend", color: "#1f8a8a" },
   backend: { label: "Backend", color: "#ff006e" },
-  game: { label: "Game Dev", color: "#ffbe0b" },
-  system: { label: "System", color: "#00d9ff" },
-  design: { label: "Design", color: "#ff006e" },
+  game: { label: "Game Dev", color: "#7a5cc4" },
+  system: { label: "System", color: "#ffffff" },
+  design: { label: "Design", color: "#2df16f" },
   tools: { label: "Tools", color: "#ffbe0b" },
 }
 
