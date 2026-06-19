@@ -131,8 +131,20 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2015 — 8 years",
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
-    prerequisites: [],
+    prerequisites: ["php"],
     position: { x: 2, y: 2 },
+  },
+  {
+    id: "mysql",
+    name: "MySQL/Database",
+    icon: Database,
+    category: "backend",
+    proficiency: "advanced",
+    experience: "Since 2015 — 8 years",
+    projects: ["ICCES", "Private Server"],
+    yearIntroduced: 2015,
+    prerequisites: ["xampp"],
+    position: { x: 2, y: 3 },
   },
   {
     id: "port-forwarding",
@@ -149,18 +161,6 @@ const SKILL_TREE: Skill[] = [
 
   // BACKEND BRANCH - DB ROW (row 3, below PHP/XAMPP)
   {
-    id: "mysql",
-    name: "MySQL/Database",
-    icon: Database,
-    category: "backend",
-    proficiency: "advanced",
-    experience: "Since 2015 — 8 years",
-    projects: ["ICCES", "Private Server"],
-    yearIntroduced: 2015,
-    prerequisites: ["xampp"],
-    position: { x: 2, y: 3 },
-  },
-  {
     id: "authentication",
     name: "Auth Systems",
     icon: Shield,
@@ -169,8 +169,8 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2020 — 5 years",
     projects: ["ICCES"],
     yearIntroduced: 2020,
-    prerequisites: ["php", "mysql"],
-    position: { x: 3.5, y: 3 },
+    prerequisites: ["mysql"],
+    position: { x: 4, y: 3 },
   },
 
   // GAME DEV BRANCH (row 4)
@@ -187,8 +187,8 @@ const SKILL_TREE: Skill[] = [
     position: { x: 0, y: 4 },
   },
   {
-    id: "unity",
-    name: "Unity ENGINE",
+    id: "unityengine",
+    name: "Unity Engine",
     icon: Gamepad2,
     category: "game",
     proficiency: "expert",
@@ -207,13 +207,13 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2021 — 4 years",
     projects: ["Esco Slot Pharmachine"],
     yearIntroduced: 2021,
-    prerequisites: ["unity"],
+    prerequisites: ["unityengine"],
     position: { x: 4, y: 4 },
   },
 
   // GAME DEV BRANCH - 3D/ANDROID (row 5, below Unity/2D)
   {
-    id: "3d-graphics",
+    id: "3d-game",
     name: "3D",
     icon: Layers,
     category: "game",
@@ -221,19 +221,19 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2022 — 3 years",
     projects: ["Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
-    prerequisites: ["unity"],
+    prerequisites: ["unityengine"],
     position: { x: 2, y: 5 },
   },
   {
     id: "android",
     name: "Android",
     icon: Smartphone,
-    category: "tools",
+    category: "game",
     proficiency: "intermediate",
     experience: "Since 2022 — 3 years",
-    projects: ["Esco Slot Pharmachine"],
+    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
-    prerequisites: ["unity"],
+    prerequisites: ["3d-game","2d-game"],
     position: { x: 4, y: 5 },
   },
 
