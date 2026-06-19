@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Code,
@@ -238,12 +238,12 @@ const SKILL_TREE: Skill[] = [
 ]
 
 const CATEGORY_INFO = {
-  frontend: { label: "Frontend", color: "var(--accent-cyan)" },
-  backend: { label: "Backend", color: "var(--accent-purple)" },
-  game: { label: "Game Dev", color: "var(--accent-gold)" },
-  system: { label: "System", color: "var(--accent-cyan)" },
-  design: { label: "Design", color: "var(--accent-purple)" },
-  tools: { label: "Tools", color: "var(--accent-gold)" },
+  frontend: { label: "Frontend", color: "#00d9ff" },
+  backend: { label: "Backend", color: "#ff006e" },
+  game: { label: "Game Dev", color: "#ffbe0b" },
+  system: { label: "System", color: "#00d9ff" },
+  design: { label: "Design", color: "#ff006e" },
+  tools: { label: "Tools", color: "#ffbe0b" },
 }
 
 const PROFICIENCY_MAP = {
@@ -253,8 +253,15 @@ const PROFICIENCY_MAP = {
   expert: { label: "Expert", width: 100, color: "rgba(255, 255, 255, 1)" },
 }
 
+// Cyberpunk glow animation styles
+const glowStyle = (color: string) => ({
+  textShadow: `0 0 10px ${color}, 0 0 20px ${color}88`,
+  boxShadow: `0 0 20px ${color}, inset 0 0 10px ${color}44`,
+})
+
 export default function SkillTree() {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   // Group skills by category
   const groupedSkills = SKILL_TREE.reduce(
@@ -268,29 +275,56 @@ export default function SkillTree() {
 
   return (
     <div className="font-sans">
-      <h3 className="mb-4 font-serif text-sm font-bold uppercase tracking-[0.22em] text-ink">
-        Interactive Skill Tree
+      {/* Scanline effect overlay */}
+      <div className="pointer-events-none fixed inset-0 z-30 opacity-5" style={{
+        backgroundImage: "repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 2px)"
+      }} />
+
+      <style>{`
+        @keyframes cyber-pulse {
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 1; }
+        }
+        @keyframes cyber-glow {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.2); }
+        }
+        .cyber-node {
+          animation: cyber-pulse 3s ease-in-out infinite;
+        }
+        .cyber-node:hover {
+          animation: cyber-glow 0.3s ease-in-out;
+        }
+      `}</style>
+
+      <h3 className="mb-6 font-mono text-sm font-bold uppercase tracking-[0.22em]" style={{ color: "#00d9ff", textShadow: "0 0 10px #00d9ff" }}>
+        ▼ NEURAL SKILL MATRIX
       </h3>
 
       {/* Skill Grid by Category */}
-      <div className="space-y-6">
+      <div ref={containerRef} className="space-y-8">
         {Object.entries(groupedSkills).map(([category, skills]) => {
           const catInfo = CATEGORY_INFO[category as keyof typeof CATEGORY_INFO]
           return (
-            <motion.div key={category} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-              <div className="mb-2 flex items-center gap-2">
-                <div
-                  className="h-0.5 w-8 rounded-full"
-                  style={{ background: catInfo.color }}
-                />
-                <h4 className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: catInfo.color }}>
-                  {catInfo.label}
+            <motion.div 
+              key={category} 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.5 }}
+              className="relative"
+            >
+              {/* Category header with glowing underline */}
+              <div className="mb-4 flex items-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: catInfo.color, boxShadow: `0 0 10px ${catInfo.color}` }} />
+                <h4 className="font-mono text-xs font-bold uppercase tracking-widest" style={{ color: catInfo.color, textShadow: `0 0 8px ${catInfo.color}88` }}>
+                  {catInfo.label} PROTOCOL
                 </h4>
+                <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${catInfo.color}, transparent)` }} />
               </div>
 
-              {/* Skill Nodes */}
-              <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-                {skills.map((skill) => {
+              {/* Skill Nodes - Cyberpunk Grid */}
+              <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+                {skills.map((skill, idx) => {
                   const Icon = skill.icon
                   const prof = PROFICIENCY_MAP[skill.proficiency]
 
@@ -298,38 +332,50 @@ export default function SkillTree() {
                     <motion.button
                       key={skill.id}
                       onClick={() => setSelectedSkill(skill)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="relative overflow-hidden rounded-lg border p-3 text-left transition-all hover:shadow-lg"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.96 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: idx * 0.08, duration: 0.3 }}
+                      className="cyber-node relative group overflow-hidden transition-all duration-300"
                       style={{
-                        borderColor: catInfo.color,
-                        background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
+                        border: `2px solid ${catInfo.color}`,
+                        background: "radial-gradient(circle at 30% 30%, rgba(0,0,0,0.8), rgba(0,0,0,0.95))",
+                        boxShadow: `0 0 15px ${catInfo.color}44, inset 0 0 15px ${catInfo.color}22`,
+                        padding: "12px",
+                        borderRadius: "2px",
                       }}
                     >
-                      {/* Glow effect */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity"
-                        style={{ background: catInfo.color, filter: "blur(12px)" }}
-                      />
+                      {/* Inner glow */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300" style={{ background: catInfo.color, filter: "blur(20px)" }} />
+                      
+                      {/* Corner accents */}
+                      <div className="absolute top-0 left-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+                      <div className="absolute top-0 right-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+                      <div className="absolute bottom-0 left-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+                      <div className="absolute bottom-0 right-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
 
                       {/* Content */}
                       <div className="relative z-10">
-                        <div className="mb-2 flex items-center justify-between">
-                          <Icon size={18} style={{ color: catInfo.color }} />
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-ink-soft">
-                            {skill.proficiency}
+                        <div className="mb-3 flex items-center justify-between">
+                          <Icon size={16} style={{ color: catInfo.color, filter: "drop-shadow(0 0 4px " + catInfo.color + ")" }} />
+                          <span className="text-[9px] font-mono uppercase tracking-wider" style={{ color: catInfo.color, opacity: 0.7 }}>
+                            {skill.proficiency.charAt(0).toUpperCase() + skill.proficiency.slice(1)}
                           </span>
                         </div>
-                        <p className="text-xs font-semibold text-ink">{skill.name}</p>
+                        <p className="text-xs font-bold text-white mb-2" style={{ textShadow: "0 0 4px rgba(0,0,0,0.8)" }}>{skill.name}</p>
 
-                        {/* Mini proficiency bar */}
-                        <div className="mt-2 h-1 overflow-hidden rounded-full bg-black/40">
+                        {/* Proficiency bar with glow */}
+                        <div className="h-1 overflow-hidden" style={{ background: "rgba(0,0,0,0.6)", border: `1px solid ${catInfo.color}44` }}>
                           <motion.div
-                            className="h-full rounded-full"
-                            style={{ background: catInfo.color }}
+                            className="h-full"
+                            style={{ 
+                              background: catInfo.color,
+                              boxShadow: `0 0 8px ${catInfo.color}`,
+                            }}
                             initial={{ width: 0 }}
                             animate={{ width: `${prof.width}%` }}
-                            transition={{ delay: 0.1, duration: 0.6 }}
+                            transition={{ delay: 0.2 + idx * 0.08, duration: 0.8, ease: "easeOut" }}
                           />
                         </div>
                       </div>
@@ -342,92 +388,105 @@ export default function SkillTree() {
         })}
       </div>
 
-      {/* Skill Details Modal */}
+      {/* Skill Details Modal - Cyberpunk Style */}
       <AnimatePresence>
         {selectedSkill && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
-            style={{ background: "color-mix(in srgb, var(--bg-void) 80%, transparent)" }}
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+            style={{ background: "rgba(0, 0, 0, 0.85)" }}
             onClick={() => setSelectedSkill(null)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative w-full max-w-md rounded-lg border p-6 sm:p-8"
-              style={{ borderColor: "var(--parchment-edge)", background: "var(--hud-bg)" }}
+              className="relative w-full max-w-md p-6 sm:p-8"
+              style={{
+                border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}`,
+                background: "radial-gradient(circle at 30% 30%, rgba(0,20,40,0.95), rgba(0,0,0,0.98))",
+                boxShadow: `0 0 30px ${CATEGORY_INFO[selectedSkill.category].color}66, inset 0 0 20px ${CATEGORY_INFO[selectedSkill.category].color}22`,
+              }}
               onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", damping: 20 }}
             >
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+              <div className="absolute top-0 right-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+              <div className="absolute bottom-0 left-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+              <div className="absolute bottom-0 right-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+
               {/* Close button */}
               <button
                 onClick={() => setSelectedSkill(null)}
-                className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded border"
-                style={{ borderColor: "var(--panel-edge)", color: "var(--ink-soft)" }}
+                className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center hover:opacity-100 transition-opacity"
+                style={{ color: CATEGORY_INFO[selectedSkill.category].color }}
               >
-                <X size={14} />
+                <X size={16} />
               </button>
 
               {/* Header */}
-              <div className="mb-4 flex items-start gap-3">
+              <div className="mb-6 flex items-start gap-4">
                 <div
-                  className="rounded-lg p-3"
+                  className="p-3 flex-shrink-0"
                   style={{
                     background: CATEGORY_INFO[selectedSkill.category].color,
-                    color: "var(--bg-void)",
+                    color: "black",
+                    boxShadow: `0 0 15px ${CATEGORY_INFO[selectedSkill.category].color}`,
                   }}
                 >
                   {<selectedSkill.icon size={24} />}
                 </div>
                 <div>
-                  <h2 className="font-serif text-xl font-bold text-ink">{selectedSkill.name}</h2>
-                  <p
-                    className="text-xs uppercase tracking-wider font-mono"
-                    style={{ color: CATEGORY_INFO[selectedSkill.category].color }}
-                  >
-                    {CATEGORY_INFO[selectedSkill.category].label}
+                  <h2 className="font-mono text-lg font-bold text-white mb-1" style={{ textShadow: `0 0 10px ${CATEGORY_INFO[selectedSkill.category].color}` }}>
+                    {selectedSkill.name}
+                  </h2>
+                  <p className="text-xs uppercase tracking-widest font-mono" style={{ color: CATEGORY_INFO[selectedSkill.category].color }}>
+                    [{CATEGORY_INFO[selectedSkill.category].label}]
                   </p>
                 </div>
               </div>
 
               {/* Experience */}
-              <div className="mb-4 rounded-md border p-3" style={{ borderColor: "var(--parchment-edge)" }}>
-                <p className="text-xs uppercase tracking-wider text-ink-soft font-mono">Experience</p>
-                <p className="mt-1 text-sm text-ink">{selectedSkill.experience}</p>
+              <div className="mb-4 p-3" style={{ border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`, background: "rgba(0,0,0,0.4)" }}>
+                <p className="text-xs uppercase tracking-wider text-gray-400 font-mono mb-1">─ Experience</p>
+                <p className="text-sm text-gray-200 font-mono">{selectedSkill.experience}</p>
               </div>
 
               {/* Proficiency */}
               <div className="mb-4">
-                <p className="mb-2 text-xs uppercase tracking-wider text-ink-soft font-mono">
-                  Proficiency
-                </p>
-                <div className="mb-2 h-2 overflow-hidden rounded-full border" style={{ borderColor: "var(--parchment-edge)" }}>
+                <p className="mb-2 text-xs uppercase tracking-wider text-gray-400 font-mono">─ Proficiency Level</p>
+                <div className="mb-2 h-2 overflow-hidden" style={{ border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`, background: "rgba(0,0,0,0.6)" }}>
                   <motion.div
-                    className="h-full rounded-full"
-                    style={{ background: CATEGORY_INFO[selectedSkill.category].color }}
+                    className="h-full"
+                    style={{ 
+                      background: CATEGORY_INFO[selectedSkill.category].color,
+                      boxShadow: `0 0 10px ${CATEGORY_INFO[selectedSkill.category].color}`,
+                    }}
                     initial={{ width: 0 }}
                     animate={{ width: `${PROFICIENCY_MAP[selectedSkill.proficiency].width}%` }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
                   />
                 </div>
-                <p className="text-xs text-ink">{PROFICIENCY_MAP[selectedSkill.proficiency].label}</p>
+                <p className="text-xs text-gray-400 font-mono">{PROFICIENCY_MAP[selectedSkill.proficiency].label}</p>
               </div>
 
               {/* Projects Used In */}
               <div>
-                <p className="mb-2 text-xs uppercase tracking-wider text-ink-soft font-mono">
-                  Projects Used In
-                </p>
+                <p className="mb-2 text-xs uppercase tracking-wider text-gray-400 font-mono">─ Active In Projects</p>
                 <div className="space-y-1">
                   {selectedSkill.projects.map((project) => (
                     <div
                       key={project}
-                      className="rounded-md border px-2 py-1"
-                      style={{ borderColor: "var(--accent-gold)", background: "color-mix(in srgb, var(--accent-gold) 12%, transparent)" }}
+                      className="px-2 py-1 text-xs text-gray-300 font-mono"
+                      style={{
+                        border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`,
+                        background: "rgba(0,0,0,0.3)",
+                      }}
                     >
-                      <p className="text-xs text-ink-soft">{project}</p>
+                      {'>'} {project}
                     </div>
                   ))}
                 </div>
