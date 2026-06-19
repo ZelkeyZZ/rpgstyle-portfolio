@@ -47,8 +47,8 @@ const V_GAP = 140  // Vertical gap between rows
 const SKILL_TREE: Skill[] = [
   // FRONTEND BRANCH (row 0)
   {
-    id: "html-css",
-    name: "HTML/CSS",
+    id: "html",
+    name: "HTML",
     icon: Code,
     category: "frontend",
     proficiency: "expert",
@@ -67,7 +67,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2017 — 8 years",
     projects: ["Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2017,
-    prerequisites: ["html-css"],
+    prerequisites: ["html"],
     position: { x: 2, y: 0 },
   },
   {
@@ -85,6 +85,18 @@ const SKILL_TREE: Skill[] = [
   
   // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
   {
+    id: "css",
+    name: "CSS",
+    icon: Palette,
+    category: "frontend",
+    proficiency: "advanced",
+    experience: "Since 2024 — 1+ years",
+    projects: ["Barcode Label Generator", "My Portfolio"],
+    yearIntroduced: 2024,
+    prerequisites: ["html"],
+    position: { x: 0, y: 1 },
+  },
+  {
     id: "tailwindcss",
     name: "Tailwind CSS",
     icon: Palette,
@@ -93,7 +105,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2024 — 1+ years",
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
-    prerequisites: ["html-css"],
+    prerequisites: ["css"],
     position: { x: 2, y: 1 },
   },
 
