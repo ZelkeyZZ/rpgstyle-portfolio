@@ -322,7 +322,7 @@ const PROFICIENCY_MAP = {
 }
 
 // Spacing for flowchart layout
-const GRID_X = 150  // Horizontal grid unit (NODE_WIDTH + H_GAP)
+const GRID_X = 80  // Horizontal grid unit (NODE_WIDTH + H_GAP)
 const GRID_Y = 150  // Vertical grid unit (NODE_HEIGHT + V_GAP)
 
 export default function SkillTree() {
