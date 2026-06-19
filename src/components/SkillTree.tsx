@@ -261,7 +261,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2017 — 8 years",
     projects: ["Minecraft Mods", "Cryofall"],
     yearIntroduced: 2017,
-    prerequisites: [],
+    prerequisites: ["csharp"],
     position: { x: 0, y: 7 },
   },
   {
