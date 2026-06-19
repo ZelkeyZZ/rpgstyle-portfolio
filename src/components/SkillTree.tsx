@@ -94,7 +94,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["html"],
-    position: { x: 2, y: .9 },
+    position: { x: 2, y: 1.15 },
   },
   {
     id: "tailwindcss",
@@ -106,7 +106,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["css"],
-    position: { x: 5, y: .9 },
+    position: { x: 5, y: 1.15 },
   },
 
   // BACKEND BRANCH (row 2)
@@ -310,8 +310,8 @@ const BRANCHES: Array<{
   yStart: number
   yEnd: number
 }> = [
-  { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 1.7 },
-  { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.7, yEnd: 3.7 },
+  { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 2 },
+  { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 2.2, yEnd: 4.2 },
   { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
   { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.8, yEnd: 6.8 },
   { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 7, yEnd: 9 },
