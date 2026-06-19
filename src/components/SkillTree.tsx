@@ -310,10 +310,10 @@ const BRANCHES: Array<{
   yStart: number
   yEnd: number
 }> = [
-  { name: "FRONTEND", category: "frontend", color: "#00d9ff", yStart: -0.5, yEnd: 1.5 },
+  { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: -0.5, yEnd: 1.5 },
   { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.7, yEnd: 3.7 },
-  { name: "GAME DEV", category: "game", color: "#ffbe0b", yStart: 3.9, yEnd: 5.7 },
-  { name: "SYSTEM", category: "system", color: "#00d9ff", yStart: 5.9, yEnd: 6.5 },
+  { name: "GAME DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
+  { name: "SYSTEM", category: "system", color: "#ffffff, yStart: 5.9, yEnd: 6.5 },
   { name: "TOOLS & DESIGN", category: "tools", color: "#ffbe0b", yStart: 6.7, yEnd: 7.7 },
 ]
 
