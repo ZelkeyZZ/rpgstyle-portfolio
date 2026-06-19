@@ -1,9 +1,9 @@
 import { motion } from "framer-motion"
-import { Swords, ScrollText, Gem } from "lucide-react"
+import { Swords, ScrollText, Gem, Compass, ShieldUser } from "lucide-react"
 import type { Section } from "../data"
 
 const TABS: { id: Section; label: string; icon: typeof Swords; color: string }[] = [
-  { id: "about", label: "About", icon: Swords, color: "var(--accent-cyan)" },
+  { id: "about", label: "Profile", icon: ShieldUser, color: "var(--accent-cyan)" },
   { id: "projects", label: "Projects", icon: ScrollText, color: "var(--accent-purple)" },
   { id: "contact", label: "Contact", icon: Gem, color: "var(--accent-gold)" },
 ]

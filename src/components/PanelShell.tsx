@@ -24,7 +24,10 @@ export default function PanelShell({
       <motion.div
         className="absolute inset-0 backdrop-blur-sm"
         style={{ background: "color-mix(in srgb, var(--bg-void) 78%, transparent)" }}
-        onClick={onClose}
+        onClick={(e) => {
+          e.stopPropagation()
+          onClose()
+        }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -55,7 +58,10 @@ export default function PanelShell({
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={(e) => {
+              e.stopPropagation()
+              onClose()
+            }}
             className="flex h-8 w-8 items-center justify-center rounded border transition-colors hover:bg-black/10"
             style={{ borderColor: "var(--panel-edge)", color: "var(--ink-soft)" }}
             aria-label="Close panel"

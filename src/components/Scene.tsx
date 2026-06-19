@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { motion } from "framer-motion"
-import { ScrollText, Swords, Gem, AlertTriangle } from "lucide-react"
+import { ScrollText, Swords, Gem, AlertTriangle, Compass, ShieldUser, BookOpenText, LoaderPinwheel} from "lucide-react"
 import type { Section } from "../data"
 import { corrupted } from "../data"
 import Particles from "./Particles"
@@ -17,9 +17,10 @@ type NodeDef = {
 }
 
 const NODES: NodeDef[] = [
-  { id: "about", label: "Character Shrine", x: 28, y: 40, icon: Swords, kind: "section", color: "var(--accent-cyan)" },
-  { id: "projects", label: "Quest Obelisk", x: 60, y: 30, icon: ScrollText, kind: "section", color: "var(--accent-purple)" },
-  { id: "contact", label: "Merchant Vault", x: 74, y: 62, icon: Gem, kind: "section", color: "var(--accent-gold)" },
+  { id: "about", label: "Character Shrine", x: 15, y: 30, icon: ShieldUser, kind: "section", color: "var(--accent-cyan)" },
+  { id: "projects", label: "Quest Obelisk", x: 20, y: 25, icon: ScrollText, kind: "section", color: "var(--accent-purple)" },
+  { id: "journey", label: "The Archive", x: 10, y: 40, icon: BookOpenText, kind: "section", color: "var(--accent-white)" },
+  { id: "contact", label: "Nexus Portal", x: 15, y: 52, icon: LoaderPinwheel, kind: "section", color: "var(--accent-gold)" },
   { id: "c1", label: "DATA CORRUPTED", x: 16, y: 72, icon: AlertTriangle, kind: "corrupt", color: "var(--accent-purple)" },
   { id: "c2", label: "DATA CORRUPTED", x: 46, y: 66, icon: AlertTriangle, kind: "corrupt", color: "var(--accent-cyan)" },
   { id: "c3", label: "DATA CORRUPTED", x: 88, y: 36, icon: AlertTriangle, kind: "corrupt", color: "var(--accent-gold)" },
@@ -200,6 +201,7 @@ export default function Scene({
         data={corrupted.find((c) => c.id === openCorrupt) ?? null}
         onClose={() => setOpenCorrupt(null)}
         onSolved={handleSolved}
+        isSolved={openCorrupt ? solved[openCorrupt] ?? false : false}
       />
     </div>
   )

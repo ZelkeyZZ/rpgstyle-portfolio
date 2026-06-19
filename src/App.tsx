@@ -10,6 +10,8 @@ import PanelShell from "./components/PanelShell"
 import AboutPanel from "./components/AboutPanel"
 import ProjectsPanel from "./components/ProjectsPanel"
 import ContactPanel from "./components/ContactPanel"
+import JourneyTimeline from "./components/JourneyTimeline"
+import Terminal from "./components/Terminal"
 
 export default function App() {
   const { isDark, toggle } = useTheme()
@@ -29,6 +31,9 @@ export default function App() {
       {/* Right inventory-tab navigation */}
       <SideNav active={active} onSelect={(s) => setActive((cur) => (cur === s ? null : s))} />
 
+      {/* Interactive command terminal */}
+      <Terminal />
+
       {/* Content panels */}
       <AnimatePresence mode="wait">
         {active === "about" && (
@@ -44,6 +49,11 @@ export default function App() {
         {active === "contact" && (
           <PanelShell key="contact" title="Loot Shop // DLC Store" variant="hud" onClose={() => setActive(null)}>
             <ContactPanel />
+          </PanelShell>
+        )}
+        {active === "journey" && (
+          <PanelShell key="journey" title="Character Journal" variant="parchment" onClose={() => setActive(null)}>
+            <JourneyTimeline />
           </PanelShell>
         )}
       </AnimatePresence>

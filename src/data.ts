@@ -1,4 +1,104 @@
-export type Section = "about" | "projects" | "contact"
+export type Section = "about" | "projects" | "contact" | "journey"
+
+export type JourneyMilestone = {
+  id: string
+  year: string
+  title: string
+  description: string
+  color: string
+  skills?: string[]
+}
+
+export const journey: JourneyMilestone[] = [
+  {
+    id: "j1",
+    year: "2006",
+    title: "Growing Up with Computers",
+    description: "Raised in a family-owned cybercafé, I spent countless hours around computers, helping manage customer sessions, maintaining PCs, and learning how technology connected people. This was also where my passion for gaming began.",
+    color: "var(--accent-cyan)",
+    skills: ["PC Hardware", "Customer Ops", "Gaming"],
+  },
+  {
+    id: "j2",
+    year: "2015-2016",
+    title: "Private Server & Self-Hosting Discovery",
+    description: "Self-hosted a dedicated AQWorlds private server using port forwarding before VPS hosting was common. This sparked my interest in web technologies, databases, and backend systems.",
+    color: "var(--accent-purple)",
+    skills: ["PHP", "MySQL", "Port Forwarding", "Self-Hosting", "XAMPP"],
+  },
+  {
+    id: "j3",
+    year: "2017",
+    title: "First Custom PC Build",
+    description: "Saved money and built my first gaming PC from scratch. Spent countless hours troubleshooting hardware, installing operating systems, configuring drivers, upgrading components, and learning how computers work beyond the software layer.",
+    color: "var(--accent-cyan)",
+    skills: ["PC Building", "Hardware", "Windows", "Troubleshooting"],
+  },
+  {
+    id: "j4",
+    year: "2017-2018",
+    title: "Modding & Reverse Engineering",
+    description: "Explored game modding for Minecraft, Cryofall, and other titles. Experimented with game modifications, automation tools, and cheat development, gaining deeper insights into how software and game systems function behind the scenes.",
+    color: "var(--accent-gold)",
+    skills: ["Modding", "Reverse Engineering", "Scripting"],
+  },
+  {
+    id: "j5",
+    year: "2019",
+    title: "Animation Competition Champion",
+    description: "Volunteered to enter in an animation competition and earned 1st Place. Despite not being a traditional artist, I created action-packed stickman fight animation that showcased creativity and persistence.",
+    color: "var(--accent-cyan)",
+    skills: ["Animation", "Creativity", "Adobe Flash"],
+  },
+  {
+    id: "j6",
+    year: "2020-2021",
+    title: "Capstone Full-Stack Development",
+    description: "Built a complete web-based capstone system featuring authentication, dashboards, email verification, and database integration. Applied years of self-taught web development knowledge and successfully graduated through the project.",
+    color: "var(--accent-purple)",
+    skills: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "XAMPP"],
+  },
+  {
+    id: "j7",
+    year: "2021",
+    title: "Junior Software Developer Intern",
+    description: "Joined Esco Life Sciences as a Junior Software Developer Intern. Learned Unity and C# from the ground up while contributing to internal software projects and adapting to professional development workflows.",
+    color: "var(--accent-gold)",
+    skills: ["Unity", "C#", "Software Development"],
+  },
+  {
+    id: "j8",
+    year: "2022-2023",
+    title: "Professional Software Developer",
+    description: "Hired full-time by Esco Life Sciences. Developed two production applications used in trade shows and exhibitions: a Slot Machine Minigame and a 3D Product Configurator. Both projects were built under strict deadlines using Unity.",
+    color: "var(--accent-cyan)",
+    skills: ["Unity", "C#", "2D/3D", "Android", "Client Projects"],
+  },
+  {
+    id: "j9",
+    year: "2023",
+    title: "Career Detour",
+    description: "Following company layoffs, transitioned into an Inventory Assistant role. Although my professional development career paused, my passion for technology and software never disappeared.",
+    color: "var(--accent-purple)",
+    skills: ["Adaptability", "Resilience", "Operations"],
+  },
+  {
+    id: "j10",
+    year: "2025",
+    title: "Return to Building",
+    description: "Started coding again while continuing to work as an Inventory Assistant. Built a lightweight barcode label generator using HTML, CSS, and JavaScript, and began creating personal projects to sharpen development skills.",
+    color: "var(--accent-gold)",
+    skills: ["JavaScript", "HTML", "CSS", "Tool Development"],
+  },
+  {
+    id: "j11",
+    year: "Current",
+    title: "3D Printing Adventure",
+    description: "Developed an interest in resin 3D printing and purchased a resin printer to learn the craft. Currently exploring printing, post-processing, and the possibility of turning the hobby into a small creative business with my girlfriend.",
+    color: "var(--accent-white)",
+    skills: ["3D Printing", "Resin Printing", "Maker Culture"],
+  },
+]
 
 export const character = {
   name: "ZelkeyZZ",
@@ -27,7 +127,7 @@ export const character = {
       color: "var(--accent-gold)",
     },
   ],
-  lore: `"Fascinated with tech and videogames since childhood. Entered the coding realm post-high school by building a self-hosted private game server. Spent 3 epic years as a Software Developer in a Life Science Company before a corporate Layoff event triggered a temporary class-change to 'Mall Inventory Assistant' to sustain livelihood. Currently seeking a portal back into a tech company guild."`,
+  lore: `"I'm someone who learns by building. From growing up in a cybercafé and running private game servers, to creating web applications, developing Unity software, building custom PCs, and now exploring resin 3D printing, I've always been drawn to understanding how things work. While my current day job is outside the tech industry, I continue to create projects, learn new tools, and work toward returning to a professional software development role."`,
 }
 
 export type QuestMedia = { type: "image" | "video"; src: string; caption?: string }
@@ -78,8 +178,8 @@ export const quests: Quest[] = [
       "An Android kiosk gamification framework that drives exhibition engagement by distributing branded corporate merchandise. Users interact with a vertical token-matching grid that mathematically checks symbol alignments against a custom reward matrix, instantly awarding physical items like keychains, tote bags, and pens based on tailored win-rate probabilities.",
     completed: true,
     media: [
-      { type: "image", src: "/assets/ESPM.png?height=600&width=900", caption: "In-game Screenshots" },
-      { type: "video", src: "/assets/ESPM-Demo.mp4?height=600&width=900", caption: "Live Demo" },
+      { type: "image", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/ESPM.png?height=600&width=900", caption: "In-game Screenshots" },
+      { type: "video", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/espm-demo.mp4?height=600&width=900", caption: "Live Demo" },
     ],
   },
   {
@@ -95,27 +195,44 @@ export const quests: Quest[] = [
       "A shipped, client-facing Unity app for ESCO Life Sciences. Sales teams could rotate, configure, and customize laboratory equipment in real-time 3D to pitch tailored builds to potential clients.",
     completed: true,
     media: [
-      { type: "image", src: "/assets/cpi-1.png?height=600&width=900", caption: "Home Menu" },
-      { type: "image", src: "/assets/cpi-2.png?height=600&width=900", caption: "Brochure" },
-      { type: "image", src: "/assets/cpi-3.png?height=600&width=900", caption: "Video Scene" },
-      { type: "video", src: "/assets/CPI3D-Demo.mp4?height=600&width=900", caption: "Live Demo" },
+      { type: "image", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/cpi-1.png?height=600&width=900", caption: "Home Menu" },
+      { type: "image", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/cpi-2.png?height=600&width=900", caption: "Brochure" },
+      { type: "image", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/cpi-3.png?height=600&width=900", caption: "Video Scene" },
+      { type: "video", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/cpi3d-demo.mp4?height=600&width=900", caption: "Live Demo" },
     ],
   },
   {
     id: "q4",
-    title: "Barcode Level Generator",
+    title: "Barcode Label Generator",
     rank: "Boredom",
     rankColor: "var(--accent-cyan)",
     summary:
       "A lightweight client-side web tool, I made when I was bored.",
     tech: ["HTML", "JS", "CSS"],
-    reward: "+ Creative XP",
+    reward: "+ Tool Unlock",
     details:
       "A client-side web tool for product label generation. By parsing an 8-digit SKU and prefix CSV database, the system mathematically computes EAN-13 check digits to render scannable barcodes instantly.",
     repo: "https://github.com/ZelkeyZZ/barcode-label-generator",
     completed: true,
     media: [
       { type: "image", src: "https://raw.githubusercontent.com/ZelkeyZZ/barcode-label-generator/refs/heads/main/assets/screenshot/Interface.png?height=600&width=900", caption: "interface" },
+    ],
+  },
+  {
+    id: "q5",
+    title: "My Portfolio",
+    rank: "Thinker",
+    rankColor: "var(--accent-white)",
+    summary:
+      "A rpg-style portfolio, is where you are right now.",
+    tech: ["React(Vite)", "TailwindCSS", "Typescript"],
+    reward: "+ Presence XP",
+    details:
+      "A long time project that I'm working on, it is still incomplete.",
+    repo: "https://github.com/ZelkeyZZ/rpgstyle-portfolio",
+    completed: false,
+    media: [
+      { type: "image", src: "https://raw.githubusercontent.com/ZelkeyZZ/rpgstyle-portfolio/refs/heads/main/public/assets/rpg-portfolio.png?height=600&width=900", caption: "interface" },
     ],
   },
 ]

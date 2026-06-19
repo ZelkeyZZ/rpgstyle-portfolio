@@ -9,19 +9,17 @@ export default function CorruptedModal({
   data,
   onClose,
   onSolved,
+  isSolved,
 }: {
   data: Corrupt | null
   onClose: () => void
   onSolved: (id: string) => void
+  isSolved: boolean
 }) {
   const [progress, setProgress] = useState(0)
-  const [done, setDone] = useState(false)
 
   useEffect(() => {
-    if (!data) return
-    
-    setProgress(0)
-    setDone(false)
+    if (!data || isSolved) return
     
     let p = 0
     let completed = false
@@ -35,7 +33,6 @@ export default function CorruptedModal({
         p = 100
         setProgress(100)
         completed = true
-        setDone(true)
         onSolved(data.id)
         clearInterval(interval)
         return
@@ -48,7 +45,7 @@ export default function CorruptedModal({
       completed = true
       clearInterval(interval)
     }
-  }, [data, onSolved])
+  }, [data, onSolved, isSolved])
 
   return (
     <AnimatePresence>
@@ -62,7 +59,10 @@ export default function CorruptedModal({
           <div
             className="absolute inset-0 backdrop-blur-sm"
             style={{ background: "color-mix(in srgb, var(--bg-void) 82%, transparent)" }}
-            onClick={onClose}
+            onClick={(e) => {
+              e.stopPropagation()
+              onClose()
+            }}
           />
           <motion.div
             className="hud-panel scanlines relative z-10 w-full max-w-md overflow-hidden rounded-lg p-5"
@@ -70,9 +70,13 @@ export default function CorruptedModal({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0 }}
             style={{ borderColor: "var(--accent-purple)" }}
+            onClick={(e) => e.stopPropagation()}
           >
             <button
-              onClick={onClose}
+              onClick={(e) => {
+                e.stopPropagation()
+                onClose()
+              }}
               className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded border"
               style={{ borderColor: "var(--panel-edge)", color: "var(--ink-soft)" }}
               aria-label="Close"
@@ -80,7 +84,7 @@ export default function CorruptedModal({
               <X size={14} />
             </button>
 
-            {!done ? (
+            {!isSolved ? (
               <>
                 <p className="font-mono text-xs uppercase tracking-[0.3em] text-purple glitch">
                   ⚠ Data Corrupted

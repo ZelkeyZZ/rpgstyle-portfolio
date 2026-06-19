@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { X, ExternalLink, ChevronLeft, ChevronRight, Sparkles, FolderGit2 } from "lucide-react"
+import { X, ExternalLink, ChevronLeft, ChevronRight, Sparkles, FolderGit2, Lock } from "lucide-react"
 import type { Quest } from "../data"
+import { OptimizedImage, OptimizedVideo } from "./OptimizedImage"
 
 export default function QuestModal({ quest, onClose }: { quest: Quest | null; onClose: () => void }) {
   const [index, setIndex] = useState(0)
@@ -80,19 +81,19 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
                 >
                   <div className="relative aspect-video w-full">
                     {current.type === "video" ? (
-                      <video
+                      <OptimizedVideo
                         key={current.src}
                         src={current.src}
-                        controls
-                        playsInline
                         className="h-full w-full object-cover"
+                        preload="metadata"
                       />
                     ) : (
-                      <img
+                      <OptimizedImage
                         key={current.src}
-                        src={current.src || "/placeholder.svg"}
+                        src={current.src}
                         alt={current.caption ?? `${quest.title} screenshot ${index + 1}`}
                         className="h-full w-full object-cover"
+                        quality="high"
                       />
                     )}
 
@@ -169,9 +170,15 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
                     {t}
                   </span>
                 ))}
-                <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-gold">
-                  <Sparkles size={13} /> {quest.reward}
-                </span>
+                {quest.completed ? (
+                  <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-gold">
+                    <Sparkles size={13} /> {quest.reward}
+                  </span>
+                ) : (
+                  <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-ink-soft opacity-60">
+                    <Lock size={13} /> Reward Locked
+                  </span>
+                )}
               </div>
             </div>
 

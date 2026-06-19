@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { CheckCircle2, MinusCircle, Sparkles, ImageIcon } from "lucide-react"
+import { CheckCircle2, MinusCircle, Sparkles, ImageIcon, Lock } from "lucide-react"
 import { quests, type Quest } from "../data"
 import QuestModal from "./QuestModal"
 
@@ -73,9 +73,15 @@ export default function ProjectsPanel() {
                   {t}
                 </span>
               ))}
-              <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-gold">
-                <Sparkles size={13} /> {q.reward}
-              </span>
+              {q.completed ? (
+                <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-gold">
+                  <Sparkles size={13} /> {q.reward}
+                </span>
+              ) : (
+                <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-ink-soft opacity-60">
+                  <Lock size={13} /> Reward Locked
+                </span>
+              )}
             </div>
             <div className="mt-3 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-ink-soft opacity-70 transition-opacity group-hover:opacity-100">
               <ImageIcon size={12} style={{ color: q.rankColor }} />

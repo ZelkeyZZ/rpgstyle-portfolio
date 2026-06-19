@@ -12,7 +12,7 @@ export default function ThemeToggle({
     <motion.button
       onClick={onToggle}
       whileTap={{ scale: 0.9, rotate: 180 }}
-      className="hud-panel clip-bevel absolute right-3 top-3 z-40 flex items-center gap-2 px-3 py-2 md:right-5 md:top-5"
+      className="hud-panel rounded-full absolute right-3 top-3 z-40 flex items-center justify-center p-2 md:right-5 md:top-5"
       aria-label={isDark ? "Switch to Restored Temple (light) mode" : "Switch to Cyber-Fantasy (dark) mode"}
     >
       <motion.span
@@ -27,9 +27,6 @@ export default function ThemeToggle({
           <Sun size={18} style={{ color: "var(--accent-gold)" }} />
         )}
       </motion.span>
-      <span className="hidden text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft sm:inline">
-        {isDark ? " " : " "}
-      </span>
     </motion.button>
   )
 }
