@@ -233,7 +233,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2022 — 3 years",
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
-    prerequisites: ["3d-game","2d-game"],
+    prerequisites: ["csharp","3d-game","unityengine","2d-game"],
     position: { x: 4, y: 5 },
   },
 
@@ -248,7 +248,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
     prerequisites: [],
-    position: { x: 0, y: 6 },
+    position: { x: 2, y: 6 },
   },
 
   // TOOLS & DESIGN BRANCH (row 7)
@@ -256,13 +256,13 @@ const SKILL_TREE: Skill[] = [
     id: "modding",
     name: "Game Modding",
     icon: Wrench,
-    category: "tools",
+    category: "game",
     proficiency: "intermediate",
     experience: "Since 2017 — 8 years",
     projects: ["Minecraft Mods", "Cryofall"],
     yearIntroduced: 2017,
     prerequisites: ["csharp"],
-    position: { x: 0, y: 7 },
+    position: { x: 0, y: 5 },
   },
   {
     id: "git",
@@ -312,7 +312,7 @@ const BRANCHES: Array<{
 }> = [
   { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: -0.5, yEnd: 1.5 },
   { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.7, yEnd: 3.7 },
-  { name: "GAME DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
+  { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
   { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.9, yEnd: 6.5 },
   { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 6.7, yEnd: 7.7 },
 ]
@@ -320,7 +320,7 @@ const BRANCHES: Array<{
 const CATEGORY_INFO = {
   frontend: { label: "Frontend", color: "#1f8a8a" },
   backend: { label: "Backend", color: "#ff006e" },
-  game: { label: "Game Dev", color: "#7a5cc4" },
+  game: { label: "Soft Dev", color: "#7a5cc4" },
   system: { label: "System", color: "#ffffff" },
   design: { label: "Design", color: "#2df16f" },
   tools: { label: "Tools", color: "#ffbe0b" },
