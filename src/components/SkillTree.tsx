@@ -56,7 +56,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0, y: 0 },
+    position: { x: 0.5, y: 0.3 },
   },
   {
     id: "javascript",
@@ -68,7 +68,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2017,
     prerequisites: ["html"],
-    position: { x: 2, y: 0 },
+    position: { x: 3.5, y: 0.3 },
   },
   {
     id: "react",
@@ -80,7 +80,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["javascript"],
-    position: { x: 4, y: 0 },
+    position: { x: 6.5, y: 0.3 },
   },
   
   // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
@@ -94,7 +94,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["html"],
-    position: { x: 0, y: 1 },
+    position: { x: 2, y: .9 },
   },
   {
     id: "tailwindcss",
@@ -106,7 +106,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["css"],
-    position: { x: 2, y: 1 },
+    position: { x: 5, y: .9 },
   },
 
   // BACKEND BRANCH (row 2)
@@ -120,7 +120,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0, y: 2 },
+    position: { x: 0.5, y: 2 },
   },
   {
     id: "xampp",
@@ -132,7 +132,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["php"],
-    position: { x: 2, y: 2 },
+    position: { x: 2.5, y: 2 },
   },
   {
     id: "mysql",
@@ -144,7 +144,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["xampp"],
-    position: { x: 2, y: 3 },
+    position: { x: 2.5, y: 3 },
   },
   {
     id: "port-forwarding",
@@ -156,7 +156,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["xampp"],
-    position: { x: 4, y: 2 },
+    position: { x: 4.5, y: 2 },
   },
 
   // BACKEND BRANCH - DB ROW (row 3, below PHP/XAMPP)
@@ -170,7 +170,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES"],
     yearIntroduced: 2020,
     prerequisites: ["mysql"],
-    position: { x: 4, y: 3 },
+    position: { x: 4.5, y: 3 },
   },
 
   // GAME DEV BRANCH (row 4)
@@ -184,7 +184,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2021,
     prerequisites: [],
-    position: { x: 0, y: 4 },
+    position: { x: 0.5, y: 4 },
   },
   {
     id: "unityengine",
@@ -196,7 +196,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2021,
     prerequisites: ["csharp"],
-    position: { x: 2, y: 4 },
+    position: { x: 2.5, y: 4 },
   },
   {
     id: "2d-game-dev",
@@ -208,7 +208,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine"],
     yearIntroduced: 2021,
     prerequisites: ["unityengine"],
-    position: { x: 4, y: 4 },
+    position: { x: 4.5, y: 4 },
   },
 
   // GAME DEV BRANCH - 3D/ANDROID (row 5, below Unity/2D)
@@ -222,7 +222,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
     prerequisites: ["unityengine"],
-    position: { x: 2, y: 5 },
+    position: { x: 2.5, y: 5 },
   },
   {
     id: "android",
@@ -234,7 +234,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
     prerequisites: ["csharp","3d-game","unityengine","2d-game"],
-    position: { x: 4, y: 5 },
+    position: { x: 4.5, y: 5 },
   },
 
   // SYSTEM BRANCH (row 6)
@@ -248,7 +248,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
     prerequisites: [],
-    position: { x: 2, y: 6 },
+    position: { x: 0.5, y: 6 },
   },
 
   // TOOLS & DESIGN BRANCH (row 7)
@@ -262,7 +262,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Minecraft Mods", "Cryofall"],
     yearIntroduced: 2017,
     prerequisites: ["csharp"],
-    position: { x: 0, y: 5 },
+    position: { x: 0.5, y: 5 },
   },
   {
     id: "git",
@@ -274,7 +274,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["All Projects"],
     yearIntroduced: 2021,
     prerequisites: [],
-    position: { x: 2, y: 7 },
+    position: { x: 0.5, y: 7.3 },
   },
   {
     id: "3d-printing",
@@ -286,7 +286,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Resin Printing"],
     yearIntroduced: 2024,
     prerequisites: [],
-    position: { x: 4, y: 7 },
+    position: { x: 2.5, y: 7.3 },
   },
   {
     id: "adobe-tools",
@@ -298,7 +298,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Animation Competition"],
     yearIntroduced: 2019,
     prerequisites: [],
-    position: { x: 6, y: 7 },
+    position: { x: 4.5, y: 7.3 },
   },
 ]
 
@@ -310,11 +310,11 @@ const BRANCHES: Array<{
   yStart: number
   yEnd: number
 }> = [
-  { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: -0.5, yEnd: 1.5 },
+  { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 1.7 },
   { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.7, yEnd: 3.7 },
   { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
-  { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.9, yEnd: 6.5 },
-  { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 6.7, yEnd: 7.7 },
+  { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.8, yEnd: 6.8 },
+  { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 7, yEnd: 9 },
 ]
 
 const CATEGORY_INFO = {
@@ -323,7 +323,7 @@ const CATEGORY_INFO = {
   game: { label: "Soft Dev", color: "#7a5cc4" },
   system: { label: "System", color: "#ffffff" },
   design: { label: "Design", color: "#2df16f" },
-  tools: { label: "Tools", color: "#ffbe0b" },
+  tools: { label: "Tools", color: "#2df16f" },
 }
 
 const PROFICIENCY_MAP = {
