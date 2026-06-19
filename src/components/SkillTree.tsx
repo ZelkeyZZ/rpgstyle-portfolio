@@ -157,7 +157,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2015 — 8 years",
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
-    prerequisites: [],
+    prerequisites: ["xampp"],
     position: { x: 2, y: 3 },
   },
   {
