@@ -68,7 +68,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2017,
     prerequisites: ["html"],
-    position: { x: 3.5, y: 0.3 },
+    position: { x: 3, y: 0.3 },
   },
   {
     id: "react",
@@ -80,21 +80,21 @@ const SKILL_TREE: Skill[] = [
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["javascript"],
-    position: { x: 6.5, y: 0.3 },
+    position: { x: 5.5, y: 0.3 },
   },
   
   // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
   {
     id: "css",
-    name: "CSS",
+    name: "CSCSSnamCSCSSnaCSCCSCSSnCSCSSnaCSCCSCSSCSCSSnamCCSCSSnaCSCCSCSCSCSSnamCSCSSnaCSCSSnamCCSCSSnaCSCSCSSnamCSCSSnaCSCCSCSSnCSCSSnaCSCCSCSSCSCSSnamCCSCSSnaCSCCSCSCSCSSnamCSCSSna
     icon: Palette,
     category: "frontend",
-    proficiency: "advanced",
+    proficiency: "advanced"
     experience: "Since 2024 — 1+ years",
-    projects: ["Barcode Label Generator", "My Portfolio"],
+    projects: ["Barcode Label Generator", "My Portfolio", "Private Server"],
     yearIntroduced: 2024,
     prerequisites: ["html"],
-    position: { x: 2, y: 1.15 },
+    position: { x: 1.75, y: 1 },
   },
   {
     id: "tailwindcss",
@@ -106,7 +106,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["css"],
-    position: { x: 5, y: 1.15 },
+    position: { x: 4.2, y: 1 },
   },
 
   // BACKEND BRANCH (row 2)
