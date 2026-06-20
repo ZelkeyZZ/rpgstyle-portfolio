@@ -404,10 +404,6 @@ export default function SkillTree() {
         .cyber-node-active { animation: cyber-node-glow 0.4s ease-out; }
       `}</style>
 
-      <h3 className="mb-6 font-mono text-sm font-bold uppercase tracking-[0.22em]" style={{ color: "#00d9ff", textShadow: "0 0 10px #00d9ff" }}>
-        ▼ BRANCHING NEURAL MATRIX
-      </h3>
-
       {/* Flowchart Tree Container */}
       <div className="relative overflow-x-auto pb-4">
         <div className="relative" style={{ minWidth: "max-content", minHeight: "1200px" }}>
