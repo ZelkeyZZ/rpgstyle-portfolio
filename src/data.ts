@@ -102,7 +102,7 @@ export const journey: JourneyMilestone[] = [
 
 export const character = {
   name: "ZelkeyZZ",
-  className: "Software & Web Developer / IT Specialist (Uncertified Lv.99)",
+  className: "Software Developer • Unity Developer • Tech Explorer",
   level: "3 Years Exp.",
   attributes: [
     {
