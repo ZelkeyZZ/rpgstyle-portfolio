@@ -38,8 +38,8 @@ type Skill = {
 }
 
 // Flowchart-style positioning constants
-const NODE_WIDTH = 50
-const NODE_HEIGHT = 50
+const NODE_WIDTH = 75
+const NODE_HEIGHT = 75
 const H_GAP = 50  // Horizontal gap between nodes in same row
 const V_GAP = 140  // Vertical gap between rows
 
