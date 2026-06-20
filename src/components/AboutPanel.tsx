@@ -19,26 +19,33 @@ export default function AboutPanel() {
   return (
     <div className="font-sans">
       {/* Tab Navigation */}
-      <div className="mb-6 flex gap-2 border-b" style={{ borderColor: "var(--parchment-edge)" }}>
+      <div className="mb-6 flex gap-0 border-b-2 overflow-x-auto" style={{ borderColor: "var(--parchment-edge)" }}>
         {tabs.map((tab) => (
-          <button
+          <motion.button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className="relative px-4 py-3 font-serif text-sm font-bold uppercase tracking-widest transition-colors duration-300"
+            className="relative px-6 py-4 font-serif text-sm font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap"
             style={{
               color: activeTab === tab.id ? "var(--gold)" : "var(--ink-soft)",
+              background: activeTab === tab.id ? "color-mix(in srgb, var(--accent-gold) 6%, transparent)" : "transparent",
+              borderRight: "1px solid var(--parchment-edge)",
             }}
+            whileHover={{ 
+              color: "var(--gold)",
+              background: "color-mix(in srgb, var(--accent-gold) 3%, transparent)",
+            }}
+            whileTap={{ scale: 0.98 }}
           >
             {tab.label}
             {activeTab === tab.id && (
               <motion.div
                 layoutId="tab-indicator"
-                className="absolute bottom-0 left-0 right-0 h-1"
-                style={{ background: "var(--gold)" }}
+                className="absolute bottom-0 left-0 right-0 h-1.5"
+                style={{ background: "var(--gold)", boxShadow: "0 0 8px var(--gold)" }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
               />
             )}
-          </button>
+          </motion.button>
         ))}
       </div>
 
