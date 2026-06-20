@@ -1,123 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { character } from "../data"
 import SkillTree from "./SkillTree"
-import AchievementsTab from "./AchievementsTab"
-import { useAchievements } from "../hooks/useAchievements"
 
-type TabType = "overview" | "attributes" | "skills" | "achievements"
+type TabType = "overview" | "attributes" | "skills"
 
 export default function AboutPanel() {
   const [activeTab, setActiveTab] = useState<TabType>("overview")
-  const [tabVisitTimes, setTabVisitTimes] = useState<Record<string, number>>({})
-  const [skillClickCount, setSkillClickCount] = useState(0)
-  const [skillsHoveredByBranch, setSkillsHoveredByBranch] = useState<Record<string, Set<string>>>({
-    frontend: new Set(),
-    backend: new Set(),
-    game: new Set(),
-    system: new Set(),
-    tools: new Set(),
-  })
-  const { unlockAchievement, isUnlocked } = useAchievements()
 
   const tabs: { id: TabType; label: string }[] = [
     { id: "overview", label: "Overview" },
     { id: "attributes", label: "Stat Attributes" },
     { id: "skills", label: "Skills" },
-    { id: "achievements", label: "Achievements" },
   ]
-
-  // Track tab visits
-  useEffect(() => {
-    const now = Date.now()
-    const newTabVisitTimes = { ...tabVisitTimes, [activeTab]: now }
-    setTabVisitTimes(newTabVisitTimes)
-
-    // Unlock tab-related achievements
-    if (activeTab === "overview" && !isUnlocked("view_overview")) unlockAchievement("view_overview")
-    if (activeTab === "attributes" && !isUnlocked("view_attributes")) unlockAchievement("view_attributes")
-    if (activeTab === "skills" && !isUnlocked("view_skills")) unlockAchievement("view_skills")
-    if (activeTab === "achievements" && !isUnlocked("view_achievements")) unlockAchievement("view_achievements")
-
-    // Check if all tabs visited
-    if (
-      newTabVisitTimes["overview"] &&
-      newTabVisitTimes["attributes"] &&
-      newTabVisitTimes["skills"] &&
-      newTabVisitTimes["achievements"] &&
-      !isUnlocked("tab_master")
-    ) {
-      unlockAchievement("tab_master")
-    }
-
-    // Speed runner achievement: all tabs within 30 seconds
-    const times = Object.values(newTabVisitTimes)
-    if (times.length >= 4) {
-      const timeDiff = Math.max(...times) - Math.min(...times)
-      if (timeDiff < 30000 && !isUnlocked("speed_runner")) {
-        unlockAchievement("speed_runner")
-      }
-    }
-  }, [activeTab, isUnlocked, unlockAchievement, tabVisitTimes])
-
-  // Handle skill interactions for achievements
-  const handleSkillHover = (skillId: string, category: string) => {
-    // Track branch exploration
-    const newBranchSkills = { ...skillsHoveredByBranch }
-    if (!newBranchSkills[category as keyof typeof skillsHoveredByBranch]) {
-      newBranchSkills[category as keyof typeof skillsHoveredByBranch] = new Set()
-    }
-    newBranchSkills[category as keyof typeof skillsHoveredByBranch].add(skillId)
-    setSkillsHoveredByBranch(newBranchSkills)
-
-    // Unlock branch achievements
-    const BRANCH_UNLOCKS: Record<string, string> = {
-      frontend: "explore_frontend",
-      backend: "explore_backend",
-      game: "explore_game_dev",
-      system: "explore_system",
-      tools: "explore_tools",
-    }
-
-    if (BRANCH_UNLOCKS[category] && !isUnlocked(BRANCH_UNLOCKS[category])) {
-      unlockAchievement(BRANCH_UNLOCKS[category])
-    }
-
-    // Curious explorer: hover 5+ skills
-    const totalHovered = Object.values(newBranchSkills).reduce((sum, set) => sum + set.size, 0)
-    if (totalHovered >= 5 && !isUnlocked("curious_explorer")) {
-      unlockAchievement("curious_explorer")
-    }
-  }
-
-  const handleSkillClick = (skillId: string) => {
-    setSkillClickCount((prev) => {
-      const newCount = prev + 1
-      // Detail oriented: click 10 different skills
-      if (newCount >= 10 && !isUnlocked("detail_oriented")) {
-        unlockAchievement("detail_oriented")
-      }
-      return newCount
-    })
-  }
-
-  const handleProjectClick = (projectId: string, projectTitle: string) => {
-    // Project-specific achievements
-    const PROJECT_ACHIEVEMENTS: Record<string, string> = {
-      icces: "first_production_project",
-      "esco-slot": "unity_developer",
-      "private-server": "server_architect",
-      "barcode-label": "full_stack_developer",
-      "my-portfolio": "portfolio_master",
-    }
-
-    const achievementId = PROJECT_ACHIEVEMENTS[projectId]
-    if (achievementId && !isUnlocked(achievementId)) {
-      unlockAchievement(achievementId)
-    }
-  }
 
   return (
     <div className="font-sans">
@@ -170,6 +67,9 @@ export default function AboutPanel() {
               <p className="font-serif text-2xl font-extrabold tracking-wide text-ink">{character.name}</p>
               <p className="mt-1 text-sm font-semibold text-ink-soft">
                 <span className="text-gold">Class:</span> {character.className}
+              </p>
+              <p className="text-xs font-semibold text-ink-soft">
+                <span className="text-gold">Occupation:</span> {character.subClass}
               </p>
               <p className="text-sm font-semibold text-ink-soft">
                 <span className="text-gold">Level:</span> {character.level}
@@ -229,19 +129,7 @@ export default function AboutPanel() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            <SkillTree onSkillHover={handleSkillHover} onSkillClick={handleSkillClick} />
-          </motion.div>
-        )}
-
-        {/* Achievements Tab */}
-        {activeTab === "achievements" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <AchievementsTab />
+            <SkillTree />
           </motion.div>
         )}
       </div>
