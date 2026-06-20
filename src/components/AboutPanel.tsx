@@ -89,9 +89,6 @@ export default function AboutPanel() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className="mb-3 font-serif text-sm font-bold uppercase tracking-[0.22em] text-ink">
-              Attribute Matrix
-            </h3>
             <div className="flex flex-col gap-4">
               {character.attributes.map((a, i) => (
                 <div key={a.key}>
