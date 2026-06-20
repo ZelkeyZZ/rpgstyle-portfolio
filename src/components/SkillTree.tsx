@@ -64,7 +64,7 @@ const SKILL_TREE: Skill[] = [
     icon: Zap,
     category: "frontend",
     proficiency: "advanced",
-    experience: "Since 2017 — 8 years",
+    experience: "Since 2015 — 11 years",
     projects: ["Barcode Label Generator", "My Portfolio", "Private Server"],
     yearIntroduced: 2017,
     prerequisites: ["html"],
