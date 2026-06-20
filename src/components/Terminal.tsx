@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { TerminalSquare, X } from "lucide-react"
 import { character, quests, loot } from "../data"
+import { useAchievements } from "../hooks/useAchievements"
 import ResumeModal from "./ResumeModal"
+import { ACHIEVEMENTS } from "../types/achievements"
 
 type LineKind = "system" | "input" | "output" | "error" | "success"
 type Line = { id: number; kind: LineKind; text: string }
