@@ -181,7 +181,7 @@ const SKILL_TREE: Skill[] = [
     category: "game",
     proficiency: "advanced",
     experience: "Since 2021 — 5 years",
-    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
+    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D", "Modding"],
     yearIntroduced: 2021,
     prerequisites: [],
     position: { x: 0.5, y: 4.2 },
