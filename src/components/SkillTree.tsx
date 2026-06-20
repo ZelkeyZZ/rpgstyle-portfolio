@@ -295,7 +295,7 @@ const SKILL_TREE: Skill[] = [
     category: "tools",
     proficiency: "intermediate",
     experience: "Since 2019 — 6 years",
-    projects: ["Animation Competition"],
+    projects: ["Private Server", "Animation Competition"],
     yearIntroduced: 2019,
     prerequisites: [],
     position: { x: 4.5, y: 7.4 },
