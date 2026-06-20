@@ -62,6 +62,63 @@ export default function AboutPanel() {
     }
   }, [activeTab, isUnlocked, unlockAchievement, tabVisitTimes])
 
+  // Handle skill interactions for achievements
+  const handleSkillHover = (skillId: string, category: string) => {
+    // Track branch exploration
+    const newBranchSkills = { ...skillsHoveredByBranch }
+    if (!newBranchSkills[category as keyof typeof skillsHoveredByBranch]) {
+      newBranchSkills[category as keyof typeof skillsHoveredByBranch] = new Set()
+    }
+    newBranchSkills[category as keyof typeof skillsHoveredByBranch].add(skillId)
+    setSkillsHoveredByBranch(newBranchSkills)
+
+    // Unlock branch achievements
+    const BRANCH_UNLOCKS: Record<string, string> = {
+      frontend: "explore_frontend",
+      backend: "explore_backend",
+      game: "explore_game_dev",
+      system: "explore_system",
+      tools: "explore_tools",
+    }
+
+    if (BRANCH_UNLOCKS[category] && !isUnlocked(BRANCH_UNLOCKS[category])) {
+      unlockAchievement(BRANCH_UNLOCKS[category])
+    }
+
+    // Curious explorer: hover 5+ skills
+    const totalHovered = Object.values(newBranchSkills).reduce((sum, set) => sum + set.size, 0)
+    if (totalHovered >= 5 && !isUnlocked("curious_explorer")) {
+      unlockAchievement("curious_explorer")
+    }
+  }
+
+  const handleSkillClick = (skillId: string) => {
+    setSkillClickCount((prev) => {
+      const newCount = prev + 1
+      // Detail oriented: click 10 different skills
+      if (newCount >= 10 && !isUnlocked("detail_oriented")) {
+        unlockAchievement("detail_oriented")
+      }
+      return newCount
+    })
+  }
+
+  const handleProjectClick = (projectId: string, projectTitle: string) => {
+    // Project-specific achievements
+    const PROJECT_ACHIEVEMENTS: Record<string, string> = {
+      icces: "first_production_project",
+      "esco-slot": "unity_developer",
+      "private-server": "server_architect",
+      "barcode-label": "full_stack_developer",
+      "my-portfolio": "portfolio_master",
+    }
+
+    const achievementId = PROJECT_ACHIEVEMENTS[projectId]
+    if (achievementId && !isUnlocked(achievementId)) {
+      unlockAchievement(achievementId)
+    }
+  }
+
   return (
     <div className="font-sans">
       {/* Tab Navigation */}
@@ -172,7 +229,7 @@ export default function AboutPanel() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            <SkillTree />
+            <SkillTree onSkillHover={handleSkillHover} onSkillClick={handleSkillClick} />
           </motion.div>
         )}
 

@@ -24,6 +24,11 @@ import {
 } from "lucide-react"
 import { journey } from "../data"
 
+interface SkillTreeProps {
+  onSkillHover?: (skillId: string, category: string) => void
+  onSkillClick?: (skillId: string) => void
+}
+
 type Skill = {
   id: string
   name: string
@@ -337,9 +342,10 @@ const PROFICIENCY_MAP = {
 const GRID_X = 80  // Horizontal grid unit (NODE_WIDTH + H_GAP)
 const GRID_Y = 150  // Vertical grid unit (NODE_HEIGHT + V_GAP)
 
-export default function SkillTree() {
+export default function SkillTree({ onSkillHover, onSkillClick }: SkillTreeProps) {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
   const [highlightedIds, setHighlightedIds] = useState<Set<string>>(new Set())
+  const [hoveredSkills, setHoveredSkills] = useState<Set<string>>(new Set())
   const svgRef = useRef<SVGSVGElement>(null)
 
   // Get the color for a skill
@@ -385,6 +391,18 @@ export default function SkillTree() {
     addPrereqs(skill.id)
     addDependents(skill.id)
     setHighlightedIds(highlighted)
+
+    // Trigger achievement for skill hover
+    const newHoveredSkills = new Set(hoveredSkills)
+    newHoveredSkills.add(skill.id)
+    setHoveredSkills(newHoveredSkills)
+    onSkillHover?.(skill.id, skill.category)
+  }
+
+  // Handle skill click for achievements
+  const handleSkillClick = (skill: Skill) => {
+    setSelectedSkill(skill)
+    onSkillClick?.(skill.id)
   }
 
   const skillMap = new Map(SKILL_TREE.map((s) => [s.id, s]))
@@ -513,7 +531,7 @@ export default function SkillTree() {
               return (
                 <motion.button
                   key={skill.id}
-                  onClick={() => setSelectedSkill(skill)}
+                  onClick={() => handleSkillClick(skill)}
                   onMouseEnter={() => handleSkillHover(skill, skillMap)}
                   onMouseLeave={() => setHighlightedIds(new Set())}
                   whileHover={{ scale: 1.12 }}
