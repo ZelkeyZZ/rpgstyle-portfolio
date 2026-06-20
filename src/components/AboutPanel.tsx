@@ -68,7 +68,7 @@ export default function AboutPanel() {
               <p className="mt-1 text-sm font-semibold text-ink-soft">
                 <span className="text-gold">Class:</span> {character.className}
               </p>
-              <p className="text-xs font-semibold text-ink-soft">
+              <p className="text-xs text-ink-soft">
                 <span className="text-gold">Occupation:</span> {character.subClass}
               </p>
               <p className="text-sm font-semibold text-ink-soft">
