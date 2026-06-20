@@ -120,7 +120,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
-    position: { x: 0.5, y: 2 },
+    position: { x: 0.5, y: 2.2 },
   },
   {
     id: "xampp",
@@ -132,7 +132,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["php"],
-    position: { x: 2.5, y: 2 },
+    position: { x: 2.5, y: 2.2 },
   },
   {
     id: "mysql",
@@ -144,7 +144,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["xampp"],
-    position: { x: 2.5, y: 3 },
+    position: { x: 1.75, y: 3 },
   },
   {
     id: "port-forwarding",
@@ -156,7 +156,7 @@ const SKILL_TREE: Skill[] = [
     projects: ["Private Server"],
     yearIntroduced: 2015,
     prerequisites: ["xampp"],
-    position: { x: 4.5, y: 2 },
+    position: { x: 4.5, y: 2.2 },
   },
 
   // BACKEND BRANCH - DB ROW (row 3, below PHP/XAMPP)
@@ -310,8 +310,8 @@ const BRANCHES: Array<{
   yStart: number
   yEnd: number
 }> = [
-    { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 2 },
-    { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 2.2, yEnd: 4.2 },
+    { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 1.7 },
+    { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.9, yEnd: 4.2 },
     { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
     { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.8, yEnd: 6.8 },
     { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 7, yEnd: 9 },
