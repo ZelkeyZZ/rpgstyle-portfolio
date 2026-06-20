@@ -1,20 +1,66 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { character } from "../data"
 import SkillTree from "./SkillTree"
+import AchievementsTab from "./AchievementsTab"
+import { useAchievements } from "../hooks/useAchievements"
 
-type TabType = "overview" | "attributes" | "skills"
+type TabType = "overview" | "attributes" | "skills" | "achievements"
 
 export default function AboutPanel() {
   const [activeTab, setActiveTab] = useState<TabType>("overview")
+  const [tabVisitTimes, setTabVisitTimes] = useState<Record<string, number>>({})
+  const [skillClickCount, setSkillClickCount] = useState(0)
+  const [skillsHoveredByBranch, setSkillsHoveredByBranch] = useState<Record<string, Set<string>>>({
+    frontend: new Set(),
+    backend: new Set(),
+    game: new Set(),
+    system: new Set(),
+    tools: new Set(),
+  })
+  const { unlockAchievement, isUnlocked } = useAchievements()
 
   const tabs: { id: TabType; label: string }[] = [
     { id: "overview", label: "Overview" },
     { id: "attributes", label: "Stat Attributes" },
     { id: "skills", label: "Skills" },
+    { id: "achievements", label: "Achievements" },
   ]
+
+  // Track tab visits
+  useEffect(() => {
+    const now = Date.now()
+    const newTabVisitTimes = { ...tabVisitTimes, [activeTab]: now }
+    setTabVisitTimes(newTabVisitTimes)
+
+    // Unlock tab-related achievements
+    if (activeTab === "overview" && !isUnlocked("view_overview")) unlockAchievement("view_overview")
+    if (activeTab === "attributes" && !isUnlocked("view_attributes")) unlockAchievement("view_attributes")
+    if (activeTab === "skills" && !isUnlocked("view_skills")) unlockAchievement("view_skills")
+    if (activeTab === "achievements" && !isUnlocked("view_achievements")) unlockAchievement("view_achievements")
+
+    // Check if all tabs visited
+    if (
+      newTabVisitTimes["overview"] &&
+      newTabVisitTimes["attributes"] &&
+      newTabVisitTimes["skills"] &&
+      newTabVisitTimes["achievements"] &&
+      !isUnlocked("tab_master")
+    ) {
+      unlockAchievement("tab_master")
+    }
+
+    // Speed runner achievement: all tabs within 30 seconds
+    const times = Object.values(newTabVisitTimes)
+    if (times.length >= 4) {
+      const timeDiff = Math.max(...times) - Math.min(...times)
+      if (timeDiff < 30000 && !isUnlocked("speed_runner")) {
+        unlockAchievement("speed_runner")
+      }
+    }
+  }, [activeTab, isUnlocked, unlockAchievement, tabVisitTimes])
 
   return (
     <div className="font-sans">
@@ -127,6 +173,18 @@ export default function AboutPanel() {
             transition={{ duration: 0.3 }}
           >
             <SkillTree />
+          </motion.div>
+        )}
+
+        {/* Achievements Tab */}
+        {activeTab === "achievements" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <AchievementsTab />
           </motion.div>
         )}
       </div>
