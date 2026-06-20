@@ -86,10 +86,10 @@ const SKILL_TREE: Skill[] = [
   // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
   {
     id: "css",
-    name: "CSCSSnamCSCSSnaCSCCSCSSnCSCSSnaCSCCSCSSCSCSSnamCCSCSSnaCSCCSCSCSCSSnamCSCSSnaCSCSSnamCCSCSSnaCSCSCSSnamCSCSSnaCSCCSCSSnCSCSSnaCSCCSCSSCSCSSnamCCSCSSnaCSCCSCSCSCSSnamCSCSSna
+    name: "CSS",
     icon: Palette,
     category: "frontend",
-    proficiency: "advanced"
+    proficiency: "advanced",
     experience: "Since 2024 — 1+ years",
     projects: ["Barcode Label Generator", "My Portfolio", "Private Server"],
     yearIntroduced: 2024,
