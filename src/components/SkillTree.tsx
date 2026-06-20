@@ -82,7 +82,7 @@ const SKILL_TREE: Skill[] = [
     prerequisites: ["javascript"],
     position: { x: 5.5, y: 0.3 },
   },
-  
+
   // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
   {
     id: "css",
@@ -102,7 +102,7 @@ const SKILL_TREE: Skill[] = [
     icon: Palette,
     category: "frontend",
     proficiency: "advanced",
-    experience: "Since 2026 — 1 years",
+    experience: "Since 2026 — 1 year",
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
     prerequisites: ["css"],
@@ -233,7 +233,7 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2022 — 3 years",
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2022,
-    prerequisites: ["csharp","3d-game","unityengine","2d-game"],
+    prerequisites: ["csharp", "3d-game", "unityengine", "2d-game"],
     position: { x: 4.5, y: 5 },
   },
 
@@ -310,12 +310,12 @@ const BRANCHES: Array<{
   yStart: number
   yEnd: number
 }> = [
-  { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 2 },
-  { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 2.2, yEnd: 4.2 },
-  { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
-  { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.8, yEnd: 6.8 },
-  { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 7, yEnd: 9 },
-]
+    { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 2 },
+    { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 2.2, yEnd: 4.2 },
+    { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
+    { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.8, yEnd: 6.8 },
+    { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 7, yEnd: 9 },
+  ]
 
 const CATEGORY_INFO = {
   frontend: { label: "Frontend", color: "#1f8a8a" },
@@ -416,7 +416,7 @@ export default function SkillTree() {
             <div key={branch.name} className="absolute w-full pointer-events-none" style={{ top: `${branch.yStart * GRID_Y}px`, height: `${(branch.yEnd - branch.yStart) * GRID_Y}px` }}>
               {/* Branch Background */}
               <div className="absolute inset-0 opacity-5" style={{ background: branch.color }} />
-              
+
               {/* Branch Label */}
               <div className="absolute left-0 top-2 px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest" style={{ color: branch.color, textShadow: `0 0 8px ${branch.color}88` }}>
                 {branch.name}
@@ -532,19 +532,19 @@ export default function SkillTree() {
                     width: `${NODE_WIDTH}px`,
                     height: `${NODE_HEIGHT}px`,
                     border: `2px solid ${catInfo.color}`,
-                    background: isLocked 
+                    background: isLocked
                       ? "radial-gradient(circle at 30% 30%, rgba(100,80,100,0.6), rgba(40,40,60,0.8))"
                       : "radial-gradient(circle at 30% 30%, rgba(0,40,60,0.8), rgba(0,0,20,0.95))",
-                    boxShadow: isHighlighted 
+                    boxShadow: isHighlighted
                       ? `0 0 20px ${catInfo.color}, inset 0 0 15px ${catInfo.color}44`
                       : `0 0 10px ${catInfo.color}22, inset 0 0 8px ${catInfo.color}11`,
                     opacity: isHighlighted ? 1 : 0.5,
                   }}
                 >
                   {/* Inner glow */}
-                  <div 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-25 transition-opacity duration-300" 
-                    style={{ background: catInfo.color, filter: "blur(20px)" }} 
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-25 transition-opacity duration-300"
+                    style={{ background: catInfo.color, filter: "blur(20px)" }}
                   />
 
                   {/* Corner accents */}
@@ -565,9 +565,9 @@ export default function SkillTree() {
                     <div className="mb-1 flex items-center justify-center">
                       {skill.icon && <skill.icon size={18} style={{ color: isLocked ? "#aaa" : catInfo.color, filter: `drop-shadow(0 0 3px ${catInfo.color})` }} />}
                     </div>
-                    <p 
-                      className="text-[10px] font-bold text-center leading-tight" 
-                      style={{ 
+                    <p
+                      className="text-[10px] font-bold text-center leading-tight"
+                      style={{
                         color: isLocked ? "#999" : "#fff",
                         textShadow: `0 0 3px ${catInfo.color}88`,
                       }}
@@ -673,7 +673,7 @@ export default function SkillTree() {
                 <div className="mb-2 h-2 overflow-hidden" style={{ border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`, background: "rgba(0,0,0,0.6)" }}>
                   <motion.div
                     className="h-full"
-                    style={{ 
+                    style={{
                       background: CATEGORY_INFO[selectedSkill.category].color,
                       boxShadow: `0 0 10px ${CATEGORY_INFO[selectedSkill.category].color}`,
                     }}
