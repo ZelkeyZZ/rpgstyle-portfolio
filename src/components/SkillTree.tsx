@@ -52,7 +52,7 @@ const SKILL_TREE: Skill[] = [
     icon: Code,
     category: "frontend",
     proficiency: "expert",
-    experience: "Since 2015 — 10 years",
+    experience: "Since 2015 — 11 years",
     projects: ["ICCES", "Barcode Label Generator", "My Portfolio"],
     yearIntroduced: 2015,
     prerequisites: [],
