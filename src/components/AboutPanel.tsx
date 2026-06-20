@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { character } from "../data"
 import SkillTree from "./SkillTree"
 
-type TabType = "overview" | "attributes" | "skills"
+type TabType = "overview" | "attributes" | "skills" | "achievements"
 
 export default function AboutPanel() {
   const [activeTab, setActiveTab] = useState<TabType>("overview")
