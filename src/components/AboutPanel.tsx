@@ -19,6 +19,12 @@ export default function AboutPanel() {
         </p>
       </div>
 
+      {/* Lore */}
+      <h3 className="mt-8 mb-2 font-serif text-sm font-bold uppercase tracking-[0.22em] text-ink">
+        Character Lore
+      </h3>
+      <p className="text-sm italic leading-relaxed text-ink-soft">{character.lore}</p>
+
       {/* Attribute matrix */}
       <h3 className="mt-6 mb-3 font-serif text-sm font-bold uppercase tracking-[0.22em] text-ink">
         Attribute Matrix
@@ -54,12 +60,6 @@ export default function AboutPanel() {
       <div className="mt-8">
         <SkillTree />
       </div>
-
-      {/* Lore */}
-      <h3 className="mt-8 mb-2 font-serif text-sm font-bold uppercase tracking-[0.22em] text-ink">
-        Character Lore
-      </h3>
-      <p className="text-sm italic leading-relaxed text-ink-soft">{character.lore}</p>
     </div>
   )
 }
