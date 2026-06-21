@@ -102,28 +102,29 @@ export const journey: JourneyMilestone[] = [
 
 export const character = {
   name: "ZelkeyZZ",
-  className: "Software & Web Developer / IT Specialist (Uncertified Lv.99)",
+  className: "Software Developer • Unity Developer • Tech Explorer",
+  subClass: "Inventsistant",
   level: "3 Years Exp.",
   attributes: [
     {
-      key: "INT",
-      label: "Intelligence",
-      value: 88,
-      desc: "Core Web Dev, React, Tailwind CSS, PHP.",
+      key: "CRTV",
+      label: "Creativity",
+      value: 84,
+      desc: "Animation, UI Design, Game Development, and Problem Solving",
       color: "var(--accent-cyan)",
     },
     {
-      key: "DEX",
-      label: "Dexterity",
-      value: 79,
-      desc: "Troubleshooting, IT Infrastructure, Dedicated Server Hosting.",
+      key: "TECH",
+      label: "Technical Mastery",
+      value: 89,
+      desc: "Web Development, Unity, Databases, Networking, and Self-Hosting",
       color: "var(--accent-purple)",
     },
     {
-      key: "VIT",
-      label: "Vitality",
+      key: "GRIT",
+      label: "Resilience",
       value: 95,
-      desc: "Resilience (Surviving Layoffs, Adaptive Lifelong Learner).",
+      desc: "Learning Through Challenges, Career Detours, and Continuous Growth",
       color: "var(--accent-gold)",
     },
   ],
@@ -261,64 +262,6 @@ export const corrupted = [
     revealedTitle: "The Layoff Survival Cookbook (App)",
     revealedText:
       "A budget meal planner built during the 'Mall Inventory Assistant' arc. Still ships great ramen optimization algorithms.",
-  },
-]
-
-export type Achievement = {
-  id: string
-  name: string
-  description: string
-  unlocked: boolean
-}
-
-export const achievements: Achievement[] = [
-  {
-    id: "a1",
-    name: "First Contact",
-    description: "Opened the terminal for the first time.",
-    unlocked: false,
-  },
-  {
-    id: "a2",
-    name: "Explorer",
-    description: "Discovered the /help command.",
-    unlocked: false,
-  },
-  {
-    id: "a3",
-    name: "Identity Crisis",
-    description: "Checked your identity with /whoami.",
-    unlocked: false,
-  },
-  {
-    id: "a4",
-    name: "Resume Seeker",
-    description: "Attempted to unlock the resume.",
-    unlocked: false,
-  },
-  {
-    id: "a5",
-    name: "Attribute Scholar",
-    description: "Examined your attribute stats.",
-    unlocked: false,
-  },
-  {
-    id: "a6",
-    name: "Quest Log Reader",
-    description: "Reviewed your project quest log.",
-    unlocked: false,
-  },
-  {
-    id: "a7",
-    name: "Network Established",
-    description: "Accessed your contact information.",
-    unlocked: false,
-  },
-  {
-    id: "a8",
-    name: "Legend Unlocked",
-    description: "Unlocked all achievements.",
-    unlocked: false,
   },
 ]
 

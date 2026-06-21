@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Code,
@@ -20,8 +20,14 @@ import {
   Hammer,
   Network,
   X,
+  Lock,
 } from "lucide-react"
 import { journey } from "../data"
+
+interface SkillTreeProps {
+  onSkillHover?: (skillId: string, category: string) => void
+  onSkillClick?: (skillId: string) => void
+}
 
 type Skill = {
   id: string
@@ -32,20 +38,30 @@ type Skill = {
   experience: string
   projects: string[]
   yearIntroduced: number
+  prerequisites?: string[]
+  position?: { x: number; y: number }
 }
 
-// Map skills across all journey milestones
+// Flowchart-style positioning constants
+const NODE_WIDTH = 75
+const NODE_HEIGHT = 75
+const H_GAP = 50  // Horizontal gap between nodes in same row
+const V_GAP = 140  // Vertical gap between rows
+
+// Map skills with flowchart positions
 const SKILL_TREE: Skill[] = [
-  // Frontend
+  // FRONTEND BRANCH (row 0)
   {
-    id: "html-css",
-    name: "HTML/CSS",
+    id: "html",
+    name: "HTML",
     icon: Code,
     category: "frontend",
     proficiency: "expert",
-    experience: "Since 2015 — 10 years",
-    projects: ["ICCES", "Barcode Label Generator", "My Portfolio"],
+    experience: "Since 2015 — 11 years",
+    projects: ["ICCES", "Barcode Label Generator", "My Portfolio", "Private Server"],
     yearIntroduced: 2015,
+    prerequisites: [],
+    position: { x: 0.5, y: 0.3 },
   },
   {
     id: "javascript",
@@ -53,9 +69,11 @@ const SKILL_TREE: Skill[] = [
     icon: Zap,
     category: "frontend",
     proficiency: "advanced",
-    experience: "Since 2017 — 8 years",
-    projects: ["Barcode Label Generator", "My Portfolio"],
+    experience: "Since 2015 — 11 years",
+    projects: ["Barcode Label Generator", "My Portfolio", "Private Server"],
     yearIntroduced: 2017,
+    prerequisites: ["html"],
+    position: { x: 3, y: 0.3 },
   },
   {
     id: "react",
@@ -63,9 +81,25 @@ const SKILL_TREE: Skill[] = [
     icon: FileJson,
     category: "frontend",
     proficiency: "advanced",
-    experience: "Since 2024 — 1+ years",
+    experience: "Since 2026 — 1 year",
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
+    prerequisites: ["javascript"],
+    position: { x: 5.5, y: 0.3 },
+  },
+
+  // FRONTEND BRANCH - CSS BRANCH (row 1, branching from HTML)
+  {
+    id: "css",
+    name: "CSS",
+    icon: Palette,
+    category: "frontend",
+    proficiency: "advanced",
+    experience: "Since 2015 — 11 years",
+    projects: ["Barcode Label Generator", "My Portfolio", "Private Server"],
+    yearIntroduced: 2024,
+    prerequisites: ["html"],
+    position: { x: 1.75, y: 1 },
   },
   {
     id: "tailwindcss",
@@ -73,12 +107,14 @@ const SKILL_TREE: Skill[] = [
     icon: Palette,
     category: "frontend",
     proficiency: "advanced",
-    experience: "Since 2024 — 1+ years",
+    experience: "Since 2026 — 1 year",
     projects: ["My Portfolio"],
     yearIntroduced: 2024,
+    prerequisites: ["css"],
+    position: { x: 4.2, y: 1 },
   },
 
-  // Backend
+  // BACKEND BRANCH (row 2)
   {
     id: "php",
     name: "PHP",
@@ -88,6 +124,20 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2015 — 8 years",
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
+    prerequisites: [],
+    position: { x: 0.5, y: 2.2 },
+  },
+  {
+    id: "xampp",
+    name: "XAMPP/Local Server",
+    icon: Server,
+    category: "backend",
+    proficiency: "advanced",
+    experience: "Since 2015 — 8 years",
+    projects: ["ICCES", "Private Server"],
+    yearIntroduced: 2015,
+    prerequisites: ["php"],
+    position: { x: 2.5, y: 2.2 },
   },
   {
     id: "mysql",
@@ -98,7 +148,23 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2015 — 8 years",
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
+    prerequisites: ["xampp"],
+    position: { x: 2.5, y: 3 },
   },
+  {
+    id: "port-forwarding",
+    name: "Port Forwarding",
+    icon: Network,
+    category: "backend",
+    proficiency: "intermediate",
+    experience: "Since 2015 — 10 years",
+    projects: ["Private Server"],
+    yearIntroduced: 2015,
+    prerequisites: ["xampp"],
+    position: { x: 4.5, y: 2.2 },
+  },
+
+  // BACKEND BRANCH - DB ROW (row 3, below PHP/XAMPP)
   {
     id: "authentication",
     name: "Auth Systems",
@@ -108,102 +174,100 @@ const SKILL_TREE: Skill[] = [
     experience: "Since 2020 — 5 years",
     projects: ["ICCES"],
     yearIntroduced: 2020,
+    prerequisites: ["mysql"],
+    position: { x: 0.5, y: 3 },
   },
 
-  // Game Development
-  {
-    id: "unity",
-    name: "Unity",
-    icon: Gamepad2,
-    category: "game",
-    proficiency: "expert",
-    experience: "Since 2021 — 4 years",
-    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
-    yearIntroduced: 2021,
-  },
+  // GAME DEV BRANCH (row 4)
   {
     id: "csharp",
     name: "C#",
     icon: Code,
     category: "game",
     proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
+    experience: "Since 2021 — 5 years",
+    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D", "Modding"],
+    yearIntroduced: 2021,
+    prerequisites: [],
+    position: { x: 0.5, y: 4.2 },
+  },
+  {
+    id: "unityengine",
+    name: "Unity Engine",
+    icon: Gamepad2,
+    category: "game",
+    proficiency: "expert",
+    experience: "Since 2021 — 5 years",
     projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
     yearIntroduced: 2021,
+    prerequisites: ["csharp"],
+    position: { x: 2.5, y: 4.2 },
   },
   {
-    id: "3d-graphics",
-    name: "3D Graphics",
-    icon: Layers,
-    category: "game",
-    proficiency: "intermediate",
-    experience: "Since 2022 — 3 years",
-    projects: ["Cell Processing Isolator 3D"],
-    yearIntroduced: 2022,
-  },
-  {
-    id: "2d-game-dev",
-    name: "2D Game Dev",
+    id: "2d-game",
+    name: "2D",
     icon: Monitor,
     category: "game",
     proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
+    experience: "Since 2021 — 5 years",
     projects: ["Esco Slot Pharmachine"],
     yearIntroduced: 2021,
+    prerequisites: ["unityengine"],
+    position: { x: 4.5, y: 4.2 },
   },
 
-  // System & Infrastructure
+  // GAME DEV BRANCH - 3D/ANDROID (row 5, below Unity/2D)
   {
-    id: "port-forwarding",
-    name: "Port Forwarding",
-    icon: Network,
-    category: "system",
+    id: "3d-game",
+    name: "3D",
+    icon: Layers,
+    category: "game",
     proficiency: "intermediate",
-    experience: "Since 2015 — 10 years",
-    projects: ["Private Server"],
-    yearIntroduced: 2015,
+    experience: "Since 2021 — 5 years",
+    projects: ["Cell Processing Isolator 3D"],
+    yearIntroduced: 2022,
+    prerequisites: ["unityengine"],
+    position: { x: 2.5, y: 5 },
   },
   {
-    id: "xampp",
-    name: "XAMPP/Local Server",
-    icon: Server,
-    category: "system",
-    proficiency: "advanced",
-    experience: "Since 2015 — 8 years",
-    projects: ["ICCES", "Private Server"],
-    yearIntroduced: 2015,
+    id: "android",
+    name: "Android",
+    icon: Smartphone,
+    category: "game",
+    proficiency: "intermediate",
+    experience: "Since 2022 — 5 years",
+    projects: ["Esco Slot Pharmachine", "Cell Processing Isolator 3D"],
+    yearIntroduced: 2022,
+    prerequisites: ["csharp", "3d-game", "unityengine", "2d-game"],
+    position: { x: 4.5, y: 5 },
   },
+
+  // SYSTEM BRANCH (row 6)
   {
     id: "pc-hardware",
     name: "PC Hardware",
     icon: Cpu,
     category: "system",
     proficiency: "intermediate",
-    experience: "Since 2017 — 8 years",
+    experience: "Since 2017 — 9 years",
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
+    prerequisites: [],
+    position: { x: 0.5, y: 6.2 },
   },
 
-  // Design & Tools
-  {
-    id: "adobe-tools",
-    name: "Adobe Flash",
-    icon: Palette,
-    category: "design",
-    proficiency: "intermediate",
-    experience: "Since 2019 — 6 years",
-    projects: ["Animation Competition"],
-    yearIntroduced: 2019,
-  },
+  // TOOLS & DESIGN BRANCH (row 7)
   {
     id: "modding",
     name: "Game Modding",
     icon: Wrench,
-    category: "tools",
+    category: "game",
     proficiency: "intermediate",
-    experience: "Since 2017 — 8 years",
-    projects: ["Minecraft Mods", "Cryofall"],
+    experience: "Since 2015 — 11 years",
+    projects: ["Minecraft Mods", "Cryofall", "AQWorlds"],
     yearIntroduced: 2017,
+    prerequisites: ["csharp"],
+    position: { x: 0.5, y: 5 },
   },
   {
     id: "git",
@@ -211,39 +275,60 @@ const SKILL_TREE: Skill[] = [
     icon: GitBranch,
     category: "tools",
     proficiency: "advanced",
-    experience: "Since 2021 — 4 years",
+    experience: "Since 2017 — 9 years",
     projects: ["All Projects"],
     yearIntroduced: 2021,
-  },
-  {
-    id: "android",
-    name: "Android Dev",
-    icon: Smartphone,
-    category: "tools",
-    proficiency: "intermediate",
-    experience: "Since 2022 — 3 years",
-    projects: ["Esco Slot Pharmachine"],
-    yearIntroduced: 2022,
+    prerequisites: [],
+    position: { x: 0.5, y: 7.4 },
   },
   {
     id: "3d-printing",
     name: "3D Printing",
     icon: Hammer,
-    category: "design",
+    category: "tools",
     proficiency: "beginner",
-    experience: "Since 2024 — 1+ years",
+    experience: "Current",
     projects: ["Resin Printing"],
     yearIntroduced: 2024,
+    prerequisites: [],
+    position: { x: 2.5, y: 7.4 },
+  },
+  {
+    id: "adobe-tools",
+    name: "Adobe Flash",
+    icon: Palette,
+    category: "tools",
+    proficiency: "intermediate",
+    experience: "Since 2015 — 11 years",
+    projects: ["Private Server", "Animation Competition"],
+    yearIntroduced: 2015,
+    prerequisites: [],
+    position: { x: 4.5, y: 7.4 },
   },
 ]
 
+// Branch information for visual grouping
+const BRANCHES: Array<{
+  name: string
+  category: string
+  color: string
+  yStart: number
+  yEnd: number
+}> = [
+    { name: "FRONTEND", category: "frontend", color: "#1f8a8a", yStart: 0, yEnd: 1.7 },
+    { name: "BACKEND", category: "backend", color: "#ff006e", yStart: 1.9, yEnd: 3.7 },
+    { name: "SOFT DEV", category: "game", color: "#7a5cc4", yStart: 3.9, yEnd: 5.7 },
+    { name: "SYSTEM", category: "system", color: "#ffffff", yStart: 5.9, yEnd: 6.9 },
+    { name: "TOOLS & DESIGN", category: "tools", color: "#2df16f", yStart: 7.1, yEnd: 8.1 },
+  ]
+
 const CATEGORY_INFO = {
-  frontend: { label: "Frontend", color: "var(--accent-cyan)" },
-  backend: { label: "Backend", color: "var(--accent-purple)" },
-  game: { label: "Game Dev", color: "var(--accent-gold)" },
-  system: { label: "System", color: "var(--accent-cyan)" },
-  design: { label: "Design", color: "var(--accent-purple)" },
-  tools: { label: "Tools", color: "var(--accent-gold)" },
+  frontend: { label: "Frontend", color: "#1f8a8a" },
+  backend: { label: "Backend", color: "#ff006e" },
+  game: { label: "Soft Dev", color: "#7a5cc4" },
+  system: { label: "System", color: "#ffffff" },
+  design: { label: "Design", color: "#2df16f" },
+  tools: { label: "Tools", color: "#2df16f" },
 }
 
 const PROFICIENCY_MAP = {
@@ -253,181 +338,381 @@ const PROFICIENCY_MAP = {
   expert: { label: "Expert", width: 100, color: "rgba(255, 255, 255, 1)" },
 }
 
-export default function SkillTree() {
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
+// Spacing for flowchart layout
+const GRID_X = 80  // Horizontal grid unit (NODE_WIDTH + H_GAP)
+const GRID_Y = 150  // Vertical grid unit (NODE_HEIGHT + V_GAP)
 
-  // Group skills by category
-  const groupedSkills = SKILL_TREE.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) acc[skill.category] = []
-      acc[skill.category].push(skill)
-      return acc
-    },
-    {} as Record<string, Skill[]>,
-  )
+export default function SkillTree({ onSkillHover, onSkillClick }: SkillTreeProps) {
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
+  const [highlightedIds, setHighlightedIds] = useState<Set<string>>(new Set())
+  const [hoveredSkills, setHoveredSkills] = useState<Set<string>>(new Set())
+  const svgRef = useRef<SVGSVGElement>(null)
+
+  // Get the color for a skill
+  const getSkillColor = (skill: Skill) => CATEGORY_INFO[skill.category].color
+
+  // Check if a skill's prerequisites are met
+  const isSkillLocked = (skill: Skill, skillMap: Map<string, Skill>) => {
+    if (!skill.prerequisites || skill.prerequisites.length === 0) return false
+    return skill.prerequisites.some((prereqId) => {
+      const prereqSkill = skillMap.get(prereqId)
+      return prereqSkill ? isSkillLocked(prereqSkill, skillMap) : false
+    })
+  }
+
+  // Highlight skill and its dependencies
+  const handleSkillHover = (skill: Skill, skillMap: Map<string, Skill>) => {
+    const highlighted = new Set<string>()
+    highlighted.add(skill.id)
+
+    // Add prerequisites
+    const addPrereqs = (skillId: string) => {
+      const skill = skillMap.get(skillId)
+      if (skill?.prerequisites) {
+        skill.prerequisites.forEach((prereqId) => {
+          if (!highlighted.has(prereqId)) {
+            highlighted.add(prereqId)
+            addPrereqs(prereqId)
+          }
+        })
+      }
+    }
+
+    // Add dependents
+    const addDependents = (skillId: string) => {
+      skillMap.forEach((s) => {
+        if (s.prerequisites?.includes(skillId) && !highlighted.has(s.id)) {
+          highlighted.add(s.id)
+          addDependents(s.id)
+        }
+      })
+    }
+
+    addPrereqs(skill.id)
+    addDependents(skill.id)
+    setHighlightedIds(highlighted)
+
+    // Trigger achievement for skill hover
+    const newHoveredSkills = new Set(hoveredSkills)
+    newHoveredSkills.add(skill.id)
+    setHoveredSkills(newHoveredSkills)
+    onSkillHover?.(skill.id, skill.category)
+  }
+
+  // Handle skill click for achievements
+  const handleSkillClick = (skill: Skill) => {
+    setSelectedSkill(skill)
+    onSkillClick?.(skill.id)
+  }
+
+  const skillMap = new Map(SKILL_TREE.map((s) => [s.id, s]))
 
   return (
     <div className="font-sans">
-      <h3 className="mb-4 font-serif text-sm font-bold uppercase tracking-[0.22em] text-ink">
-        Interactive Skill Tree
-      </h3>
+      <style>{`
+        @keyframes branch-pulse {
+          0%, 100% { stroke-width: 1.5px; filter: drop-shadow(0 0 2px currentColor); }
+          50% { stroke-width: 2px; filter: drop-shadow(0 0 4px currentColor); }
+        }
+        .branch-line { animation: branch-pulse 2.5s ease-in-out infinite; }
+        @keyframes cyber-node-glow {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.15); }
+        }
+        .cyber-node-active { animation: cyber-node-glow 0.4s ease-out; }
+      `}</style>
 
-      {/* Skill Grid by Category */}
-      <div className="space-y-6">
-        {Object.entries(groupedSkills).map(([category, skills]) => {
-          const catInfo = CATEGORY_INFO[category as keyof typeof CATEGORY_INFO]
-          return (
-            <motion.div key={category} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-              <div className="mb-2 flex items-center gap-2">
-                <div
-                  className="h-0.5 w-8 rounded-full"
-                  style={{ background: catInfo.color }}
-                />
-                <h4 className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: catInfo.color }}>
-                  {catInfo.label}
-                </h4>
+      {/* Flowchart Tree Container */}
+      <div className="relative overflow-x-auto pb-4">
+        <div className="relative" style={{ minWidth: "max-content", minHeight: "1200px" }}>
+          {/* Branch Separators and Labels */}
+          {BRANCHES.map((branch, idx) => (
+            <div key={branch.name} className="absolute w-full pointer-events-none" style={{ top: `${branch.yStart * GRID_Y}px`, height: `${(branch.yEnd - branch.yStart) * GRID_Y}px` }}>
+              {/* Branch Background */}
+              <div className="absolute inset-0 opacity-5" style={{ background: branch.color }} />
+
+              {/* Branch Label */}
+              <div className="absolute left-0 top-2 px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest" style={{ color: branch.color, textShadow: `0 0 8px ${branch.color}88` }}>
+                {branch.name}
               </div>
 
-              {/* Skill Nodes */}
-              <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-                {skills.map((skill) => {
-                  const Icon = skill.icon
-                  const prof = PROFICIENCY_MAP[skill.proficiency]
+              {/* Branch Divider Line */}
+              {idx < BRANCHES.length - 1 && (
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-px"
+                  style={{
+                    background: `linear-gradient(90deg, ${branch.color}44, transparent)`,
+                  }}
+                />
+              )}
+            </div>
+          ))}
 
+          {/* Connection Lines SVG - Straight bars and vertical drops */}
+          <svg
+            ref={svgRef}
+            className="absolute top-0 left-0 pointer-events-none"
+            width="100%"
+            height="1200"
+            style={{ filter: "drop-shadow(0 0 8px rgba(46, 230, 230, 0.3))" }}
+          >
+            <defs>
+              <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#2ee6e6" opacity="0.6" />
+              </marker>
+              <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#a974ff" opacity="0.6" />
+              </marker>
+              <marker id="arrowGold" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#f5c451" opacity="0.6" />
+              </marker>
+            </defs>
+            {/* Draw straight connection bars (horizontal and vertical) */}
+            {SKILL_TREE.map((skill) => {
+              if (!skill.prerequisites || skill.prerequisites.length === 0) return null
+              return skill.prerequisites.map((prereqId) => {
+                const prereqSkill = skillMap.get(prereqId)
+                if (!prereqSkill || !skill.position || !prereqSkill.position) return null
+
+                const fromX = prereqSkill.position.x * GRID_X + NODE_WIDTH / 2
+                const fromY = prereqSkill.position.y * GRID_Y + NODE_HEIGHT / 2
+                const toX = skill.position.x * GRID_X + NODE_WIDTH / 2
+                const toY = skill.position.y * GRID_Y + NODE_HEIGHT / 2
+
+                const isHighlighted = highlightedIds.has(skill.id) || highlightedIds.has(prereqId)
+                const lineColor = highlightedIds.size > 0 && !isHighlighted ? "rgba(46, 230, 230, 0.15)" : getSkillColor(prereqSkill)
+                const strokeWidth = highlightedIds.size > 0 && isHighlighted ? 8 : 6
+
+                // Calculate connection path: horizontal from source, vertical to target, horizontal to destination
+                const midX = (fromX + toX) / 2
+
+                if (skill.position.y === prereqSkill.position.y) {
+                  // Same row - straight horizontal line
                   return (
-                    <motion.button
-                      key={skill.id}
-                      onClick={() => setSelectedSkill(skill)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="relative overflow-hidden rounded-lg border p-3 text-left transition-all hover:shadow-lg"
+                    <line
+                      key={`${prereqId}-${skill.id}`}
+                      x1={fromX}
+                      y1={fromY}
+                      x2={toX}
+                      y2={toY}
+                      stroke={lineColor}
+                      strokeWidth={strokeWidth}
+                      className={isHighlighted ? "branch-line" : ""}
+                    />
+                  )
+                } else {
+                  // Different rows - L-shaped path (horizontal then vertical)
+                  const pathData = `M ${fromX} ${fromY} L ${toX} ${fromY} L ${toX} ${toY}`
+                  return (
+                    <path
+                      key={`${prereqId}-${skill.id}`}
+                      d={pathData}
+                      stroke={lineColor}
+                      strokeWidth={strokeWidth}
+                      fill="none"
+                      className={isHighlighted ? "branch-line" : ""}
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
+                    />
+                  )
+                }
+              })
+            })}
+          </svg>
+
+          {/* Skill Nodes */}
+          <div className="relative" style={{ height: "1200px" }}>
+            {SKILL_TREE.map((skill, idx) => {
+              if (!skill.position) return null
+              const isLocked = isSkillLocked(skill, skillMap)
+              const isHighlighted = highlightedIds.size === 0 || highlightedIds.has(skill.id)
+              const catInfo = CATEGORY_INFO[skill.category]
+
+              return (
+                <motion.button
+                  key={skill.id}
+                  onClick={() => handleSkillClick(skill)}
+                  onMouseEnter={() => handleSkillHover(skill, skillMap)}
+                  onMouseLeave={() => setHighlightedIds(new Set())}
+                  whileHover={{ scale: 1.12 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: idx * 0.05, duration: 0.4 }}
+                  className="cyber-node-active absolute group overflow-hidden transition-all duration-300"
+                  style={{
+                    left: `${skill.position.x * GRID_X}px`,
+                    top: `${skill.position.y * GRID_Y}px`,
+                    width: `${NODE_WIDTH}px`,
+                    height: `${NODE_HEIGHT}px`,
+                    border: `2px solid ${catInfo.color}`,
+                    background: isLocked
+                      ? "radial-gradient(circle at 30% 30%, rgba(100,80,100,0.6), rgba(40,40,60,0.8))"
+                      : "radial-gradient(circle at 30% 30%, rgba(0,40,60,0.8), rgba(0,0,20,0.95))",
+                    boxShadow: isHighlighted
+                      ? `0 0 20px ${catInfo.color}, inset 0 0 15px ${catInfo.color}44`
+                      : `0 0 10px ${catInfo.color}22, inset 0 0 8px ${catInfo.color}11`,
+                    opacity: isHighlighted ? 1 : 0.5,
+                  }}
+                >
+                  {/* Inner glow */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-25 transition-opacity duration-300"
+                    style={{ background: catInfo.color, filter: "blur(20px)" }}
+                  />
+
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+                  <div className="absolute top-0 right-0 w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+                  <div className="absolute bottom-0 left-0 w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+                  <div className="absolute bottom-0 right-0 w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" style={{ border: `1px solid ${catInfo.color}` }} />
+
+                  {/* Lock icon overlay for locked skills */}
+                  {isLocked && (
+                    <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/40">
+                      <Lock size={20} style={{ color: catInfo.color, opacity: 0.8 }} />
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <div className="relative z-10 h-full flex flex-col items-center justify-center p-2">
+                    <div className="mb-1 flex items-center justify-center">
+                      {skill.icon && <skill.icon size={18} style={{ color: isLocked ? "#aaa" : catInfo.color, filter: `drop-shadow(0 0 3px ${catInfo.color})` }} />}
+                    </div>
+                    <p
+                      className="text-[10px] font-bold text-center leading-tight"
                       style={{
-                        borderColor: catInfo.color,
-                        background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
+                        color: isLocked ? "#999" : "#fff",
+                        textShadow: `0 0 3px ${catInfo.color}88`,
                       }}
                     >
-                      {/* Glow effect */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity"
-                        style={{ background: catInfo.color, filter: "blur(12px)" }}
-                      />
-
-                      {/* Content */}
-                      <div className="relative z-10">
-                        <div className="mb-2 flex items-center justify-between">
-                          <Icon size={18} style={{ color: catInfo.color }} />
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-ink-soft">
-                            {skill.proficiency}
-                          </span>
-                        </div>
-                        <p className="text-xs font-semibold text-ink">{skill.name}</p>
-
-                        {/* Mini proficiency bar */}
-                        <div className="mt-2 h-1 overflow-hidden rounded-full bg-black/40">
-                          <motion.div
-                            className="h-full rounded-full"
-                            style={{ background: catInfo.color }}
-                            initial={{ width: 0 }}
-                            animate={{ width: `${prof.width}%` }}
-                            transition={{ delay: 0.1, duration: 0.6 }}
-                          />
-                        </div>
-                      </div>
-                    </motion.button>
-                  )
-                })}
-              </div>
-            </motion.div>
-          )
-        })}
+                      {skill.name}
+                    </p>
+                  </div>
+                </motion.button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Skill Details Modal */}
       <AnimatePresence>
         {selectedSkill && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
-            style={{ background: "color-mix(in srgb, var(--bg-void) 80%, transparent)" }}
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+            style={{ background: "rgba(0, 0, 0, 0.85)" }}
             onClick={() => setSelectedSkill(null)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative w-full max-w-md rounded-lg border p-6 sm:p-8"
-              style={{ borderColor: "var(--parchment-edge)", background: "var(--hud-bg)" }}
+              className="relative w-full max-w-md max-h-[80vh] overflow-y-auto p-6 sm:p-8"
+              style={{
+                border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}`,
+                background: "radial-gradient(circle at 30% 30%, rgba(0,20,40,0.95), rgba(0,0,0,0.98))",
+                boxShadow: `0 0 30px ${CATEGORY_INFO[selectedSkill.category].color}66, inset 0 0 20px ${CATEGORY_INFO[selectedSkill.category].color}22`,
+              }}
               onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", damping: 20 }}
             >
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+              <div className="absolute top-0 right-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+              <div className="absolute bottom-0 left-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+              <div className="absolute bottom-0 right-0 w-3 h-3" style={{ border: `2px solid ${CATEGORY_INFO[selectedSkill.category].color}` }} />
+
               {/* Close button */}
               <button
                 onClick={() => setSelectedSkill(null)}
-                className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded border"
-                style={{ borderColor: "var(--panel-edge)", color: "var(--ink-soft)" }}
+                className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center hover:opacity-100 transition-opacity"
+                style={{ color: CATEGORY_INFO[selectedSkill.category].color }}
               >
-                <X size={14} />
+                <X size={16} />
               </button>
 
               {/* Header */}
-              <div className="mb-4 flex items-start gap-3">
+              <div className="mb-6 flex items-start gap-4">
                 <div
-                  className="rounded-lg p-3"
+                  className="p-3 flex-shrink-0"
                   style={{
                     background: CATEGORY_INFO[selectedSkill.category].color,
-                    color: "var(--bg-void)",
+                    color: "black",
+                    boxShadow: `0 0 15px ${CATEGORY_INFO[selectedSkill.category].color}`,
                   }}
                 >
                   {<selectedSkill.icon size={24} />}
                 </div>
                 <div>
-                  <h2 className="font-serif text-xl font-bold text-ink">{selectedSkill.name}</h2>
-                  <p
-                    className="text-xs uppercase tracking-wider font-mono"
-                    style={{ color: CATEGORY_INFO[selectedSkill.category].color }}
-                  >
-                    {CATEGORY_INFO[selectedSkill.category].label}
+                  <h2 className="font-mono text-lg font-bold text-white mb-1" style={{ textShadow: `0 0 10px ${CATEGORY_INFO[selectedSkill.category].color}` }}>
+                    {selectedSkill.name}
+                  </h2>
+                  <p className="text-xs uppercase tracking-widest font-mono" style={{ color: CATEGORY_INFO[selectedSkill.category].color }}>
+                    [{CATEGORY_INFO[selectedSkill.category].label}]
                   </p>
                 </div>
               </div>
 
+              {/* Prerequisites */}
+              {selectedSkill.prerequisites && selectedSkill.prerequisites.length > 0 && (
+                <div className="mb-4 p-3" style={{ border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`, background: "rgba(0,0,0,0.4)" }}>
+                  <p className="text-xs uppercase tracking-wider text-gray-400 font-mono mb-2">─ Prerequisites</p>
+                  <div className="space-y-1">
+                    {selectedSkill.prerequisites.map((prereqId) => {
+                      const prereq = skillMap.get(prereqId)
+                      return (
+                        <div key={prereqId} className="text-xs text-gray-300 font-mono flex items-center gap-2">
+                          <span style={{ color: CATEGORY_INFO[prereq?.category || "frontend"].color }}>◆</span>
+                          {prereq?.name}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Experience */}
-              <div className="mb-4 rounded-md border p-3" style={{ borderColor: "var(--parchment-edge)" }}>
-                <p className="text-xs uppercase tracking-wider text-ink-soft font-mono">Experience</p>
-                <p className="mt-1 text-sm text-ink">{selectedSkill.experience}</p>
+              <div className="mb-4 p-3" style={{ border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`, background: "rgba(0,0,0,0.4)" }}>
+                <p className="text-xs uppercase tracking-wider text-gray-400 font-mono mb-1">─ Experience</p>
+                <p className="text-sm text-gray-200 font-mono">{selectedSkill.experience}</p>
               </div>
 
               {/* Proficiency */}
               <div className="mb-4">
-                <p className="mb-2 text-xs uppercase tracking-wider text-ink-soft font-mono">
-                  Proficiency
-                </p>
-                <div className="mb-2 h-2 overflow-hidden rounded-full border" style={{ borderColor: "var(--parchment-edge)" }}>
+                <p className="mb-2 text-xs uppercase tracking-wider text-gray-400 font-mono">─ Proficiency Level</p>
+                <div className="mb-2 h-2 overflow-hidden" style={{ border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`, background: "rgba(0,0,0,0.6)" }}>
                   <motion.div
-                    className="h-full rounded-full"
-                    style={{ background: CATEGORY_INFO[selectedSkill.category].color }}
+                    className="h-full"
+                    style={{
+                      background: CATEGORY_INFO[selectedSkill.category].color,
+                      boxShadow: `0 0 10px ${CATEGORY_INFO[selectedSkill.category].color}`,
+                    }}
                     initial={{ width: 0 }}
                     animate={{ width: `${PROFICIENCY_MAP[selectedSkill.proficiency].width}%` }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
                   />
                 </div>
-                <p className="text-xs text-ink">{PROFICIENCY_MAP[selectedSkill.proficiency].label}</p>
+                <p className="text-xs text-gray-400 font-mono">{PROFICIENCY_MAP[selectedSkill.proficiency].label}</p>
               </div>
 
               {/* Projects Used In */}
               <div>
-                <p className="mb-2 text-xs uppercase tracking-wider text-ink-soft font-mono">
-                  Projects Used In
-                </p>
+                <p className="mb-2 text-xs uppercase tracking-wider text-gray-400 font-mono">─ Active In Projects</p>
                 <div className="space-y-1">
                   {selectedSkill.projects.map((project) => (
                     <div
                       key={project}
-                      className="rounded-md border px-2 py-1"
-                      style={{ borderColor: "var(--accent-gold)", background: "color-mix(in srgb, var(--accent-gold) 12%, transparent)" }}
+                      className="px-2 py-1 text-xs text-gray-300 font-mono"
+                      style={{
+                        border: `1px solid ${CATEGORY_INFO[selectedSkill.category].color}44`,
+                        background: "rgba(0,0,0,0.3)",
+                      }}
                     >
-                      <p className="text-xs text-ink-soft">{project}</p>
+                      {'>'} {project}
                     </div>
                   ))}
                 </div>
