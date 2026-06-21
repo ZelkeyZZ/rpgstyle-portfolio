@@ -1,31 +1,12 @@
 import { useRef, useState, useCallback } from "react"
 import { motion } from "framer-motion"
-import { ScrollText, AlertTriangle, ShieldUser, BookOpenText, LoaderPinwheel } from "lucide-react"
 import type { Section } from "../data"
 import { corrupted } from "../data"
 import Particles from "./Particles"
 import CorruptedModal from "./CorruptedModal"
 import { usePlayerController } from "../hooks/usePlayerController"
-
-type NodeDef = {
-  id: Section | string
-  label: string
-  x: number // percentage
-  y: number
-  icon: typeof Swords
-  kind: "section" | "corrupt"
-  color: string
-}
-
-const NODES: NodeDef[] = [
-  { id: "about", label: "Character Shrine", x: 15, y: 30, icon: ShieldUser, kind: "section", color: "var(--accent-cyan)" },
-  { id: "projects", label: "Quest Obelisk", x: 20, y: 25, icon: ScrollText, kind: "section", color: "var(--accent-purple)" },
-  { id: "journey", label: "The Archive", x: 10, y: 40, icon: BookOpenText, kind: "section", color: "var(--accent-white)" },
-  { id: "contact", label: "Nexus Portal", x: 15, y: 52, icon: LoaderPinwheel, kind: "section", color: "var(--accent-gold)" },
-  { id: "c1", label: "DATA CORRUPTED", x: 16, y: 72, icon: AlertTriangle, kind: "corrupt", color: "var(--accent-purple)" },
-  { id: "c2", label: "DATA CORRUPTED", x: 46, y: 66, icon: AlertTriangle, kind: "corrupt", color: "var(--accent-cyan)" },
-  { id: "c3", label: "DATA CORRUPTED", x: 88, y: 36, icon: AlertTriangle, kind: "corrupt", color: "var(--accent-gold)" },
-]
+import { nodeRegistry } from "../config/nodeRegistry"
+import type { NodeDef } from "../config/nodeRegistry"
 
 export default function Scene({
   active,
@@ -76,7 +57,7 @@ export default function Scene({
       />
 
       {/* Interactive nodes */}
-      {NODES.map((n) => {
+      {nodeRegistry.map((n) => {
         const Icon = n.icon
         const isCorrupt = n.kind === "corrupt"
         const isSolved = solved[n.id]

@@ -1,12 +1,12 @@
 import { motion } from "framer-motion"
-import { Swords, ScrollText, Gem, Compass, ShieldUser } from "lucide-react"
 import type { Section } from "../data"
+import { sectionNodes } from "../config/nodeRegistry"
 
-const TABS: { id: Section; label: string; icon: typeof Swords; color: string }[] = [
-  { id: "about", label: "Profile", icon: ShieldUser, color: "var(--accent-cyan)" },
-  { id: "projects", label: "Projects", icon: ScrollText, color: "var(--accent-purple)" },
-  { id: "contact", label: "Contact", icon: Gem, color: "var(--accent-gold)" },
-]
+// SideNav only surfaces a curated subset of section nodes
+const NAV_IDS: Section[] = ["about", "projects", "contact"]
+const TABS = sectionNodes
+  .filter((n) => NAV_IDS.includes(n.id as Section))
+  .sort((a, b) => NAV_IDS.indexOf(a.id as Section) - NAV_IDS.indexOf(b.id as Section))
 
 export default function SideNav({
   active,
@@ -31,7 +31,7 @@ export default function SideNav({
             transition={{ delay: 0.2 + i * 0.1, type: "spring", stiffness: 220, damping: 20 }}
             whileHover={{ x: -6, rotate: -1 }}
             whileTap={{ scale: 0.93, rotate: 2 }}
-            onClick={() => onSelect(t.id)}
+            onClick={() => onSelect(t.id as Section)}
             className="hud-panel clip-bevel group relative flex w-16 flex-col items-center gap-1 px-2 py-3 md:w-20 md:py-4"
             style={{
               borderColor: isActive ? t.color : "var(--panel-edge)",
@@ -57,7 +57,7 @@ export default function SideNav({
               className="text-[10px] font-bold uppercase tracking-[0.14em] md:text-xs"
               style={{ color: isActive ? t.color : "var(--ink-soft)" }}
             >
-              {t.label}
+              {t.navLabel ?? t.label}
             </span>
           </motion.button>
         )
