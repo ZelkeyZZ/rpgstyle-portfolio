@@ -35,6 +35,7 @@ export default function Terminal() {
   const [history, setHistory] = useState<string[]>([])
   const [histIndex, setHistIndex] = useState<number | null>(null)
   const [resumeOpen, setResumeOpen] = useState(false)
+  const { getAllAchievements, getUnlockedCount, unlockAchievement } = useAchievements()
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -71,14 +72,15 @@ export default function Terminal() {
       case "help":
         push([
           mkLine("system", "Available commands:"),
-          mkLine("output", "  /help      Returns available commands."),
-          mkLine("output", "  /about     Shows character sheet."),
-          mkLine("output", "  /projects  Lists projects in quest log."),
-          mkLine("output", "  /contact   Shows contact information."),
-          mkLine("output", "  /resume    Unlock the professional resume (DLC)."),
-          mkLine("output", "  /skills    Displays attribute stats."),
-          mkLine("output", "  /whoami    Prints current identity."),
-          mkLine("output", "  /clear     Clears the terminal."),
+          mkLine("output", "  /help          Returns available commands."),
+          mkLine("output", "  /about         Shows character sheet."),
+          mkLine("output", "  /projects      Lists projects in quest log."),
+          mkLine("output", "  /contact       Shows contact information."),
+          mkLine("output", "  /resume        Unlock the professional resume (DLC)."),
+          mkLine("output", "  /skills        Displays attribute stats."),
+          mkLine("output", "  /achievements  Shows all achievements."),
+          mkLine("output", "  /whoami        Prints current identity."),
+          mkLine("output", "  /clear         Clears the terminal."),
         ])
         break
 
@@ -157,6 +159,35 @@ export default function Terminal() {
       case "clear":
         setLines([])
         break
+
+      case "achievements": {
+        const achievements = getAllAchievements()
+        const unlockedCount = getUnlockedCount()
+        const achievementLines = achievements.map((a) => {
+          const status = a.unlockedAt ? "[✓]" : "[ ]"
+          return mkLine(a.unlockedAt ? "success" : "output", `${status} ${a.icon} ${a.name}`)
+        })
+        push([
+          mkLine(
+            "system",
+            `=== ACHIEVEMENTS — ${unlockedCount}/${achievements.length} unlocked ===`,
+          ),
+          ...achievementLines,
+        ])
+        break
+      }
+
+      case "achievements unlock": {
+        const achievements = getAllAchievements()
+        achievements.forEach((a) => {
+          unlockAchievement(a.id as any)
+        })
+        push([
+          mkLine("success", "All achievements unlocked!"),
+          mkLine("system", "Achievement mastery acquired."),
+        ])
+        break
+      }
 
       default:
         push([
