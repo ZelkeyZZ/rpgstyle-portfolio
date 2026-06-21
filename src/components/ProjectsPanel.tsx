@@ -4,10 +4,19 @@ import { CheckCircle2, MinusCircle, Sparkles, ImageIcon, Lock } from "lucide-rea
 import { quests, type Quest } from "../data"
 import QuestModal from "./QuestModal"
 
-export default function ProjectsPanel() {
+interface ProjectsPanelProps {
+  onProjectClick?: (projectId: string, projectTitle: string) => void
+}
+
+export default function ProjectsPanel({ onProjectClick }: ProjectsPanelProps) {
   const [active, setActive] = useState<Quest | null>(null)
   const totalQuests = quests.length
   const completedQuests = quests.filter((q) => q.completed).length
+
+  const handleProjectClick = (q: Quest) => {
+    setActive(q)
+    onProjectClick?.(q.id, q.title)
+  }
 
   return (
     <div className="font-sans">
@@ -22,13 +31,13 @@ export default function ProjectsPanel() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.1 + i * 0.1, type: "spring", stiffness: 200, damping: 22 }}
             whileHover={{ scale: 1.015 }}
-            onClick={() => setActive(q)}
+            onClick={() => handleProjectClick(q)}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault()
-                setActive(q)
+                handleProjectClick(q)
               }
             }}
             className="group relative cursor-pointer overflow-hidden rounded-md border p-4 outline-none transition-shadow focus-visible:ring-2"
