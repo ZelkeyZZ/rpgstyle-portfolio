@@ -49,14 +49,18 @@ export function useAchievements() {
     if (!achievement) return null
     return {
       ...achievement,
-      unlockedAt: unlockedAchievements[id],
+      unlockedAt: unlockedAchievements[id]
+        ? new Date(unlockedAchievements[id]).toISOString()
+        : null,
     }
   }
 
   const getAllAchievements = (): Achievement[] => {
     return Object.values(ACHIEVEMENTS).map((achievement) => ({
       ...achievement,
-      unlockedAt: unlockedAchievements[achievement.id],
+      unlockedAt: unlockedAchievements[achievement.id]
+        ? new Date(unlockedAchievements[achievement.id]).toISOString()
+        : null,
     }))
   }
 

@@ -7,7 +7,7 @@ export interface Achievement {
   icon: string
   rarity: "common" | "uncommon" | "rare" | "epic" | "legendary"
   secret: boolean
-  unlockedAt?: number
+  unlockedAt: string | null
 }
 
 export const ACHIEVEMENTS: Record<AchievementId, Omit<Achievement, "unlockedAt">> = {
