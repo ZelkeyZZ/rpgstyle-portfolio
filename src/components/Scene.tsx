@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useRef, useState, useCallback } from "react"
 import { motion } from "framer-motion"
-import { ScrollText, Swords, Gem, AlertTriangle, Compass, ShieldUser, BookOpenText, LoaderPinwheel} from "lucide-react"
+import { ScrollText, AlertTriangle, ShieldUser, BookOpenText, LoaderPinwheel } from "lucide-react"
 import type { Section } from "../data"
 import { corrupted } from "../data"
 import Particles from "./Particles"
 import CorruptedModal from "./CorruptedModal"
+import { usePlayerController } from "../hooks/usePlayerController"
 
 type NodeDef = {
   id: Section | string
@@ -34,56 +35,9 @@ export default function Scene({
   onOpen: (s: Section) => void
 }) {
   const fieldRef = useRef<HTMLDivElement>(null)
-  const [pos, setPos] = useState({ x: 50, y: 78 })
+  const { position, moveTo, handleClickMove } = usePlayerController(fieldRef)
   const [openCorrupt, setOpenCorrupt] = useState<string | null>(null)
   const [solved, setSolved] = useState<Record<string, boolean>>({})
-  const keys = useRef<Set<string>>(new Set())
-
-  // WASD / Arrow continuous movement
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      const k = e.key.toLowerCase()
-      if (["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"].includes(k)) {
-        keys.current.add(k)
-      }
-    }
-    const up = (e: KeyboardEvent) => keys.current.delete(e.key.toLowerCase())
-    window.addEventListener("keydown", down)
-    window.addEventListener("keyup", up)
-    return () => {
-      window.removeEventListener("keydown", down)
-      window.removeEventListener("keyup", up)
-    }
-  }, [])
-
-  useEffect(() => {
-    let raf = 0
-    const step = () => {
-      const k = keys.current
-      if (k.size) {
-        setPos((p) => {
-          let { x, y } = p
-          const spd = 0.8
-          if (k.has("w") || k.has("arrowup")) y -= spd
-          if (k.has("s") || k.has("arrowdown")) y += spd
-          if (k.has("a") || k.has("arrowleft")) x -= spd
-          if (k.has("d") || k.has("arrowright")) x += spd
-          return { x: Math.max(4, Math.min(96, x)), y: Math.max(8, Math.min(92, y)) }
-        })
-      }
-      raf = requestAnimationFrame(step)
-    }
-    raf = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(raf)
-  }, [])
-
-  const moveToClick = useCallback((e: React.MouseEvent) => {
-    const rect = fieldRef.current?.getBoundingClientRect()
-    if (!rect) return
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    setPos({ x: Math.max(4, Math.min(96, x)), y: Math.max(8, Math.min(92, y)) })
-  }, [])
 
   const handleSolved = useCallback((id: string) => {
     setSolved((s) => ({ ...s, [id]: true }))
@@ -91,7 +45,7 @@ export default function Scene({
 
   const triggerNode = (n: NodeDef) => {
     // walk avatar toward node, then activate
-    setPos({ x: n.x, y: Math.min(92, n.y + 8) })
+    moveTo({ x: n.x, y: Math.min(92, n.y + 8) })
     setTimeout(() => {
       if (n.kind === "section") onOpen(n.id as Section)
       else setOpenCorrupt(n.id)
@@ -101,7 +55,7 @@ export default function Scene({
   return (
     <div
       ref={fieldRef}
-      onClick={moveToClick}
+      onClick={handleClickMove}
       className="iso-grid scanlines absolute inset-0 cursor-crosshair overflow-hidden"
       style={{ backgroundColor: "var(--bg-void)" }}
     >
@@ -166,9 +120,9 @@ export default function Scene({
       {/* Avatar */}
       <motion.div
         className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-1/2"
-        animate={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+        animate={{ left: `${position.x}%`, top: `${position.y}%` }}
         transition={{ type: "spring", stiffness: 120, damping: 18 }}
-        style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+        style={{ left: `${position.x}%`, top: `${position.y}%` }}
       >
         <div className="relative flex flex-col items-center">
           <div
