@@ -23,6 +23,17 @@ export type Quest = {
   repo?: string
   media?: QuestMedia[]
   completed?: boolean
+  // Engineering-focused fields
+  challenge?: string
+  solution?: string
+  architecture?: {
+    overview?: string
+    diagram?: string
+    components?: string[]
+    codeSnippets?: { label: string; code: string; language: string }[]
+    technicalNotes?: string[]
+  }
+  lessonsLearned?: string[]
 }
 
 export type Corrupt = {
