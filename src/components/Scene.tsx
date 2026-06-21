@@ -72,8 +72,14 @@ export default function Scene({
             style={{ left: `${n.x}%`, top: `${n.y}%` }}
             aria-label={n.label}
           >
+            {/* Increased tap target for mobile: pseudo-element for touch area */}
             <div
-              className={`relative flex h-14 w-14 items-center justify-center rounded-xl border float-bob ${
+              className="absolute inset-0 -m-3"
+              style={{ pointerEvents: "auto" }}
+            />
+            
+            <div
+              className={`relative flex h-12 w-12 items-center justify-center rounded-xl border float-bob md:h-14 md:w-14 ${
                 isCorrupt && !isSolved ? "glitch" : ""
               }`}
               style={{
@@ -86,10 +92,10 @@ export default function Scene({
                 className="absolute inset-0 rounded-xl pulse-ring"
                 style={{ ["--glow" as string]: `color-mix(in srgb, ${n.color} 50%, transparent)` }}
               />
-              <Icon size={22} style={{ color: n.color }} strokeWidth={1.6} />
+              <Icon size={20} className="md:size-[22px]" style={{ color: n.color }} strokeWidth={1.6} />
             </div>
             <span
-              className="mt-2 block whitespace-nowrap text-center text-[10px] font-semibold uppercase tracking-[0.18em]"
+              className="mt-2 block whitespace-nowrap text-center text-[9px] font-semibold uppercase tracking-[0.18em] md:text-[10px]"
               style={{ color: isCorrupt && !isSolved ? n.color : "var(--ink-soft)" }}
             >
               {isCorrupt && isSolved ? "RESTORED" : n.label}
@@ -126,8 +132,11 @@ export default function Scene({
       {/* Controls hint */}
       {active === null && (
         <div className="pointer-events-none absolute bottom-5 left-1/2 z-20 -translate-x-1/2 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-ink-soft glow-text">
+          <p className="hidden font-mono text-[11px] uppercase tracking-[0.3em] text-ink-soft glow-text md:block">
             Click to travel · WASD / Arrows to move · Tap a glowing node
+          </p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-soft glow-text md:hidden">
+            Tap nodes · Mobile drawer menu
           </p>
         </div>
       )}

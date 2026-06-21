@@ -264,3 +264,48 @@ body {
 .pulse-ring {
   animation: pulse-ring 2.2s ease-out infinite;
 }
+
+/* Mobile responsiveness enhancements -------------------- */
+
+/* Prevent zoom on iOS input focus */
+input {
+  font-size: 16px;
+}
+
+/* Improve touch target sizes on mobile */
+@media (max-width: 768px) {
+  button {
+    /* Ensure minimum 44x44 touch target */
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Improve text readability on smaller screens */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Safe area support for notched devices */
+@supports (padding: max(0px)) {
+  main {
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}

@@ -113,7 +113,7 @@ export const navigationEntries: NavigationEntry[] = [
     color: "var(--accent-gold)",
     showInSidebar: true,
     panelComponent: ContactPanel,
-    panelTitle: "Loot Shop // DLC Store",
+    panelTitle: "The Gateway",
     panelVariant: "hud",
   },
 ]
