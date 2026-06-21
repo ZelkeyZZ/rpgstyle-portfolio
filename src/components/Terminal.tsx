@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { TerminalSquare, X } from "lucide-react"
-import { character, quests, loot } from "../data"
+import { character, quests, loot, achievements as defaultAchievements } from "../data"
 import ResumeModal from "./ResumeModal"
 
 type LineKind = "system" | "input" | "output" | "error" | "success"
@@ -33,6 +33,7 @@ export default function Terminal() {
   const [history, setHistory] = useState<string[]>([])
   const [histIndex, setHistIndex] = useState<number | null>(null)
   const [resumeOpen, setResumeOpen] = useState(false)
+  const [achievements, setAchievements] = useState(defaultAchievements)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -69,14 +70,15 @@ export default function Terminal() {
       case "help":
         push([
           mkLine("system", "Available commands:"),
-          mkLine("output", "  /help      Returns available commands."),
-          mkLine("output", "  /about     Shows character sheet."),
-          mkLine("output", "  /projects  Lists projects in quest log."),
-          mkLine("output", "  /contact   Shows contact information."),
-          mkLine("output", "  /resume    Unlock the professional resume (DLC)."),
-          mkLine("output", "  /skills    Displays attribute stats."),
-          mkLine("output", "  /whoami    Prints current identity."),
-          mkLine("output", "  /clear     Clears the terminal."),
+          mkLine("output", "  /help          Returns available commands."),
+          mkLine("output", "  /about         Shows character sheet."),
+          mkLine("output", "  /projects      Lists projects in quest log."),
+          mkLine("output", "  /contact       Shows contact information."),
+          mkLine("output", "  /resume        Unlock the professional resume (DLC)."),
+          mkLine("output", "  /skills        Displays attribute stats."),
+          mkLine("output", "  /achievements  Shows your achievements."),
+          mkLine("output", "  /whoami        Prints current identity."),
+          mkLine("output", "  /clear         Clears the terminal."),
         ])
         break
 
@@ -154,6 +156,40 @@ export default function Terminal() {
 
       case "clear":
         setLines([])
+        break
+
+      case "achievements": {
+        const allUnlocked = achievements.every((a) => a.unlocked)
+        const unlockedCount = achievements.filter((a) => a.unlocked).length
+        
+        const achievementLines = achievements.map((a) =>
+          mkLine(
+            a.unlocked ? "success" : "output",
+            `  [${a.unlocked ? "✓" : " "}] ${a.name}${a.unlocked ? "" : " [LOCKED]"}`,
+          ),
+        )
+        
+        push([
+          mkLine("system", `=== ACHIEVEMENTS — ${unlockedCount}/${achievements.length} ===`),
+          ...achievementLines,
+          mkLine("system", ""),
+        ])
+        
+        if (allUnlocked) {
+          push([mkLine("success", ">>> ALL ACHIEVEMENTS UNLOCKED <<<")])
+        }
+        break
+      }
+
+      case "achievements unlock":
+        setAchievements((prev) =>
+          prev.map((a) => ({ ...a, unlocked: true }))
+        )
+        push([
+          mkLine("success", "Achievement unlock sequence initiated..."),
+          mkLine("system", "All achievements have been unlocked!"),
+          mkLine("success", ">>> LEGEND STATUS ACHIEVED <<<"),
+        ])
         break
 
       default:

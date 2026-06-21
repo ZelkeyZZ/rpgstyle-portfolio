@@ -264,6 +264,64 @@ export const corrupted = [
   },
 ]
 
+export type Achievement = {
+  id: string
+  name: string
+  description: string
+  unlocked: boolean
+}
+
+export const achievements: Achievement[] = [
+  {
+    id: "a1",
+    name: "First Contact",
+    description: "Opened the terminal for the first time.",
+    unlocked: false,
+  },
+  {
+    id: "a2",
+    name: "Explorer",
+    description: "Discovered the /help command.",
+    unlocked: false,
+  },
+  {
+    id: "a3",
+    name: "Identity Crisis",
+    description: "Checked your identity with /whoami.",
+    unlocked: false,
+  },
+  {
+    id: "a4",
+    name: "Resume Seeker",
+    description: "Attempted to unlock the resume.",
+    unlocked: false,
+  },
+  {
+    id: "a5",
+    name: "Attribute Scholar",
+    description: "Examined your attribute stats.",
+    unlocked: false,
+  },
+  {
+    id: "a6",
+    name: "Quest Log Reader",
+    description: "Reviewed your project quest log.",
+    unlocked: false,
+  },
+  {
+    id: "a7",
+    name: "Network Established",
+    description: "Accessed your contact information.",
+    unlocked: false,
+  },
+  {
+    id: "a8",
+    name: "Legend Unlocked",
+    description: "Unlocked all achievements.",
+    unlocked: false,
+  },
+]
+
 export const loot = [
   {
     id: "github",
