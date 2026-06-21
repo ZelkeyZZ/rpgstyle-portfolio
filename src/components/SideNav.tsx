@@ -1,12 +1,9 @@
 import { motion } from "framer-motion"
 import type { Section } from "../data"
-import { sectionNodes } from "../config/nodeRegistry"
+import { sidebarEntries } from "../config/navigation"
 
-// SideNav only surfaces a curated subset of section nodes
-const NAV_IDS: Section[] = ["about", "projects", "contact"]
-const TABS = sectionNodes
-  .filter((n) => NAV_IDS.includes(n.id as Section))
-  .sort((a, b) => NAV_IDS.indexOf(a.id as Section) - NAV_IDS.indexOf(b.id as Section))
+// Sidebar items are now derived directly from navigation.ts (showInSidebar: true)
+const TABS = sidebarEntries
 
 export default function SideNav({
   active,
@@ -22,7 +19,7 @@ export default function SideNav({
     >
       {TABS.map((t, i) => {
         const Icon = t.icon
-        const isActive = active === t.id
+        const isActive = active === (t.id as Section)
         return (
           <motion.button
             key={t.id}
@@ -31,7 +28,7 @@ export default function SideNav({
             transition={{ delay: 0.2 + i * 0.1, type: "spring", stiffness: 220, damping: 20 }}
             whileHover={{ x: -6, rotate: -1 }}
             whileTap={{ scale: 0.93, rotate: 2 }}
-            onClick={() => onSelect(t.id as Section)}
+            onClick={() => onSelect(t.id)}
             className="hud-panel clip-bevel group relative flex w-16 flex-col items-center gap-1 px-2 py-3 md:w-20 md:py-4"
             style={{
               borderColor: isActive ? t.color : "var(--panel-edge)",
