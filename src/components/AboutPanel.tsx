@@ -106,29 +106,65 @@ export default function AboutPanel() {
   return (
     <div className="font-sans">
       {/* Tab Navigation */}
-      <div className="mb-6 flex gap-0 border-b-2 overflow-x-auto" style={{ borderColor: "var(--parchment-edge)" }}>
+      <div className="mb-6 flex gap-2 overflow-x-auto" style={{ 
+        background: "color-mix(in srgb, var(--accent-gold) 2%, transparent)",
+        borderBottom: "2px solid var(--parchment-edge)",
+        paddingBottom: "2px"
+      }}>
         {tabs.map((tab) => (
           <motion.button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className="relative px-6 py-4 font-serif text-sm font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap"
+            className="relative px-5 py-3 font-serif text-sm font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap group overflow-hidden"
             style={{
               color: activeTab === tab.id ? "var(--gold)" : "var(--ink-soft)",
-              background: activeTab === tab.id ? "color-mix(in srgb, var(--accent-gold) 6%, transparent)" : "transparent",
-              borderRight: "1px solid var(--parchment-edge)",
+              background: activeTab === tab.id 
+                ? `linear-gradient(135deg, color-mix(in srgb, var(--accent-gold) 12%, transparent), color-mix(in srgb, var(--accent-gold) 6%, transparent))`
+                : "color-mix(in srgb, var(--parchment-edge) 8%, transparent)",
+              border: activeTab === tab.id 
+                ? `2px solid var(--accent-gold)` 
+                : `2px solid color-mix(in srgb, var(--parchment-edge) 40%, transparent)`,
+              boxShadow: activeTab === tab.id 
+                ? `0 0 12px color-mix(in srgb, var(--accent-gold) 35%, transparent), inset 0 0 8px color-mix(in srgb, var(--accent-gold) 15%, transparent)`
+                : "inset 0 0 4px color-mix(in srgb, #000 5%, transparent)",
+              clipPath: "polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))",
             }}
             whileHover={{ 
               color: "var(--gold)",
-              background: "color-mix(in srgb, var(--accent-gold) 3%, transparent)",
+              background: activeTab === tab.id 
+                ? `linear-gradient(135deg, color-mix(in srgb, var(--accent-gold) 16%, transparent), color-mix(in srgb, var(--accent-gold) 10%, transparent))`
+                : "color-mix(in srgb, var(--parchment-edge) 15%, transparent)",
             }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
           >
-            {tab.label}
+            {/* Tab edge accent - top-left corner */}
+            <div 
+              className="absolute top-0 left-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ 
+                border: `1px solid var(--gold)`,
+                display: activeTab === tab.id ? "block" : "none"
+              }} 
+            />
+            
+            {/* Tab edge accent - bottom-right corner */}
+            <div 
+              className="absolute bottom-0 right-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ 
+                border: `1px solid var(--gold)`,
+                display: activeTab === tab.id ? "block" : "none"
+              }} 
+            />
+
+            <span className="relative z-10">{tab.label}</span>
+            
             {activeTab === tab.id && (
               <motion.div
                 layoutId="tab-indicator"
-                className="absolute bottom-0 left-0 right-0 h-1.5"
-                style={{ background: "var(--gold)", boxShadow: "0 0 8px var(--gold)" }}
+                className="absolute bottom-0 left-0 right-0 h-0.5"
+                style={{ 
+                  background: "linear-gradient(90deg, transparent, var(--accent-gold), transparent)",
+                  boxShadow: "0 0 12px var(--accent-gold)" 
+                }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
               />
             )}
