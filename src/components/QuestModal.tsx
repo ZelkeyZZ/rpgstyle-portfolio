@@ -23,10 +23,11 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
   ].filter((t) => t.content)
 
   useEffect(() => {
+    if (!quest) return
     setIndex(0)
     setActiveTab("overview")
     setExpandedAccordion(null)
-  }, [quest])
+  }, [quest?.id])
 
   useEffect(() => {
     if (!quest) return
@@ -36,8 +37,10 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
       if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + media.length) % Math.max(media.length, 1))
     }
     window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [quest, media.length, onClose])
+    return () => {
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [quest?.id, media.length, onClose])
 
   const current = media[index]
 
@@ -111,86 +114,94 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
             {/* scroll body */}
             <div className="flex-1 overflow-y-auto p-4">
               <AnimatePresence mode="wait">
-                {/* media viewer */}
+                {/* media viewer - only show on overview tab */}
                 {hasMedia && activeTab === "overview" && (
-                <div
-                  className="relative overflow-hidden rounded-md border"
-                  style={{ borderColor: "var(--panel-edge)", background: "color-mix(in srgb,#000 35%,transparent)" }}
-                >
-                  <div className="relative aspect-video w-full">
-                    {current.type === "video" ? (
-                      <OptimizedVideo
-                        key={current.src}
-                        src={current.src}
-                        className="h-full w-full object-cover"
-                        preload="metadata"
-                      />
-                    ) : (
-                      <OptimizedImage
-                        key={current.src}
-                        src={current.src}
-                        alt={current.caption ?? `${quest.title} screenshot ${index + 1}`}
-                        className="h-full w-full object-cover"
-                        quality="high"
-                      />
-                    )}
+                  <motion.div
+                    key="media-gallery"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div
+                      className="relative overflow-hidden rounded-md border"
+                      style={{ borderColor: "var(--panel-edge)", background: "color-mix(in srgb,#000 35%,transparent)" }}
+                    >
+                      <div className="relative aspect-video w-full">
+                        {current.type === "video" ? (
+                          <OptimizedVideo
+                            key={`video-${current.src}`}
+                            src={current.src}
+                            className="h-full w-full object-cover"
+                            preload="metadata"
+                          />
+                        ) : (
+                          <OptimizedImage
+                            key={`image-${current.src}`}
+                            src={current.src}
+                            alt={current.caption ?? `${quest.title} screenshot ${index + 1}`}
+                            className="h-full w-full object-cover"
+                            quality="high"
+                          />
+                        )}
 
+                        {media.length > 1 && (
+                          <>
+                            <button
+                              onClick={() => setIndex((i) => (i - 1 + media.length) % media.length)}
+                              className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
+                              style={{
+                                borderColor: "var(--panel-edge)",
+                                background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
+                                color: "var(--ink)",
+                              }}
+                              aria-label="Previous media"
+                            >
+                              <ChevronLeft size={16} />
+                            </button>
+                            <button
+                              onClick={() => setIndex((i) => (i + 1) % media.length)}
+                              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
+                              style={{
+                                borderColor: "var(--panel-edge)",
+                                background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
+                                color: "var(--ink)",
+                              }}
+                              aria-label="Next media"
+                            >
+                              <ChevronRight size={16} />
+                            </button>
+                          </>
+                        )}
+                      </div>
+
+                      {current.caption && (
+                        <p className="border-t px-3 py-2 font-mono text-[11px] text-ink-soft" style={{ borderColor: "var(--panel-edge)" }}>
+                          {current.caption}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* thumbnail dots - only show on overview tab */}
                     {media.length > 1 && (
-                      <>
-                        <button
-                          onClick={() => setIndex((i) => (i - 1 + media.length) % media.length)}
-                          className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
-                          style={{
-                            borderColor: "var(--panel-edge)",
-                            background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
-                            color: "var(--ink)",
-                          }}
-                          aria-label="Previous media"
-                        >
-                          <ChevronLeft size={16} />
-                        </button>
-                        <button
-                          onClick={() => setIndex((i) => (i + 1) % media.length)}
-                          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
-                          style={{
-                            borderColor: "var(--panel-edge)",
-                            background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
-                            color: "var(--ink)",
-                          }}
-                          aria-label="Next media"
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                      </>
+                      <div className="mt-3 flex items-center justify-center gap-2">
+                        {media.map((_, i) => (
+                          <button
+                            key={`dot-${i}`}
+                            onClick={() => setIndex(i)}
+                            className="h-2 rounded-full transition-all"
+                            style={{
+                              width: i === index ? 20 : 8,
+                              background: i === index ? quest.rankColor : "var(--panel-edge)",
+                              boxShadow: i === index ? `0 0 8px ${quest.rankColor}` : "none",
+                            }}
+                            aria-label={`Go to media ${i + 1}`}
+                          />
+                        ))}
+                      </div>
                     )}
-                  </div>
-
-                  {current.caption && (
-                    <p className="border-t px-3 py-2 font-mono text-[11px] text-ink-soft" style={{ borderColor: "var(--panel-edge)" }}>
-                      {current.caption}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* thumbnail dots */}
-              {media.length > 1 && (
-                <div className="mt-3 flex items-center justify-center gap-2">
-                  {media.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setIndex(i)}
-                      className="h-2 rounded-full transition-all"
-                      style={{
-                        width: i === index ? 20 : 8,
-                        background: i === index ? quest.rankColor : "var(--panel-edge)",
-                        boxShadow: i === index ? `0 0 8px ${quest.rankColor}` : "none",
-                      }}
-                      aria-label={`Go to media ${i + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
+                  </motion.div>
+                )}
 
               {/* TAB: Overview */}
               {activeTab === "overview" && (
