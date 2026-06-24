@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { X, ChevronDown } from "lucide-react"
+import { X, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import type { ForgottenProject } from "../data/forgottenProjects"
+import { OptimizedImage, OptimizedVideo } from "./OptimizedImage"
 
 type TabType = "overview" | "reason" | "lessons"
 
@@ -28,6 +29,7 @@ export default function ForgottenWorkshopModal({
 }) {
   const [activeTab, setActiveTab] = useState<TabType>("overview")
   const [expandedAccordion, setExpandedAccordion] = useState<string | null>(null)
+  const [mediaIndex, setMediaIndex] = useState(0)
 
   // Tabs show based on content
   const tabs: { id: TabType; label: string; content: boolean }[] = [
@@ -40,12 +42,16 @@ export default function ForgottenWorkshopModal({
     if (!project) return
     setActiveTab("overview")
     setExpandedAccordion(null)
+    setMediaIndex(0)
   }, [project?.id])
 
   if (!project) return null
 
   const statusColor = statusColors[project.status]
-  const hasEvidence = project.evidence && (project.evidence.screenshots?.length ?? 0) > 0
+  const media = project.evidence?.media ?? []
+  const hasMedia = media.length > 0
+  const notes = project.evidence?.notes ?? []
+  const currentMedia = hasMedia ? media[mediaIndex] : null
 
   return (
     <AnimatePresence>
@@ -147,27 +153,113 @@ export default function ForgottenWorkshopModal({
                       ))}
                     </div>
 
-                    {/* evidence section */}
-                    <div className="mt-4 p-3 rounded border" style={{ borderColor: "var(--panel-edge)" }}>
-                      {hasEvidence ? (
-                        <div>
-                          <h4 className="font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft mb-2">
-                            Evidence
-                          </h4>
-                          <p className="text-xs text-ink-soft">{project.evidence.screenshots?.length ?? 0} screenshots preserved</p>
-                          {project.evidence.notes && (
-                            <p className="text-xs text-ink-soft mt-2 italic">{project.evidence.notes}</p>
+                    {/* media gallery */}
+                    {hasMedia && (
+                      <div className="mt-4 space-y-3">
+                        <div
+                          className="relative overflow-hidden rounded-md border"
+                          style={{ borderColor: "var(--panel-edge)", background: "color-mix(in srgb,#000 35%,transparent)" }}
+                        >
+                          <div className="relative aspect-video w-full">
+                            {currentMedia?.type === "video" ? (
+                              <OptimizedVideo
+                                key={`video-${currentMedia.src}`}
+                                src={currentMedia.src}
+                                className="h-full w-full object-cover"
+                                preload="metadata"
+                              />
+                            ) : (
+                              <OptimizedImage
+                                key={`image-${currentMedia?.src}`}
+                                src={currentMedia?.src ?? ""}
+                                alt={currentMedia?.caption ?? `${project.title} screenshot`}
+                                className="h-full w-full object-cover"
+                                quality="high"
+                              />
+                            )}
+
+                            {media.length > 1 && (
+                              <>
+                                <button
+                                  onClick={() => setMediaIndex((i) => (i - 1 + media.length) % media.length)}
+                                  className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
+                                  style={{
+                                    borderColor: "var(--panel-edge)",
+                                    background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
+                                    color: "var(--ink)",
+                                  }}
+                                  aria-label="Previous media"
+                                >
+                                  <ChevronLeft size={16} />
+                                </button>
+                                <button
+                                  onClick={() => setMediaIndex((i) => (i + 1) % media.length)}
+                                  className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
+                                  style={{
+                                    borderColor: "var(--panel-edge)",
+                                    background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
+                                    color: "var(--ink)",
+                                  }}
+                                  aria-label="Next media"
+                                >
+                                  <ChevronRight size={16} />
+                                </button>
+                              </>
+                            )}
+                          </div>
+
+                          {currentMedia?.caption && (
+                            <p className="border-t px-3 py-2 font-mono text-[11px] text-ink-soft" style={{ borderColor: "var(--panel-edge)" }}>
+                              {currentMedia.caption}
+                            </p>
                           )}
                         </div>
-                      ) : (
-                        <div>
-                          <p className="text-xs italic text-ink-soft">
-                            No surviving screenshots or source code remain.
-                          </p>
-                          <p className="text-xs text-ink-soft mt-2">Only development notes and memories remain.</p>
-                        </div>
-                      )}
-                    </div>
+
+                        {/* media dots */}
+                        {media.length > 1 && (
+                          <div className="flex items-center justify-center gap-2">
+                            {media.map((_, i) => (
+                              <button
+                                key={`dot-${i}`}
+                                onClick={() => setMediaIndex(i)}
+                                className="h-2 rounded-full transition-all"
+                                style={{
+                                  width: i === mediaIndex ? 20 : 8,
+                                  background: i === mediaIndex ? statusColor.badge : "var(--panel-edge)",
+                                  boxShadow: i === mediaIndex ? `0 0 8px ${statusColor.badge}` : "none",
+                                }}
+                                aria-label={`Go to media ${i + 1}`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* development notes */}
+                    {notes.length > 0 && (
+                      <div className="mt-4 p-3 rounded border" style={{ borderColor: "var(--panel-edge)" }}>
+                        <h4 className="font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft mb-2">
+                          Development Notes
+                        </h4>
+                        <ul className="space-y-1">
+                          {notes.map((note, i) => (
+                            <li key={i} className="text-xs text-ink-soft flex items-start gap-2">
+                              <span className="shrink-0 text-accent-gold">•</span>
+                              <span>{note}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {!hasMedia && notes.length === 0 && (
+                      <div className="mt-4 p-3 rounded border italic" style={{ borderColor: "var(--panel-edge)" }}>
+                        <p className="text-xs text-ink-soft">
+                          No surviving media or development notes remain—only memories of what once was.
+                        </p>
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
