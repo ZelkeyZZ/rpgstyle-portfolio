@@ -191,16 +191,10 @@ export default function Terminal() {
       }
 
       case "projects deleted": {
-        const statusColorMap: Record<string, string> = {
-          abandoned: "var(--accent-purple)",
-          cancelled: "var(--accent-cyan)",
-          lost: "var(--ink-soft)",
-          prototype: "var(--accent-gold)",
-        }
         const projectLines = forgottenProjects.flatMap((p) => [
           mkLine("output", `  [${p.status.toUpperCase()}] ${p.title} (${p.year})`),
           mkLine("output", `      ${p.summary}`),
-          mkLine("output", `      Tech: ${p.tech.join(", ")}`),
+          mkLine("output", `      Tech: ${p.technologies.join(", ")}`),
         ])
         push([
           mkLine("system", `=== FORGOTTEN ARCHIVE — ${forgottenProjects.length} unreleased projects ===`),
