@@ -4,6 +4,7 @@ import {
   BookOpenText,
   LoaderPinwheel,
   AlertTriangle,
+  ArchiveX,
 } from "lucide-react"
 import type { Section } from "../data"
 import type { ComponentType } from "react"
@@ -12,6 +13,7 @@ import AboutPanel from "../components/AboutPanel"
 import ProjectsPanel from "../components/ProjectsPanel"
 import ContactPanel from "../components/ContactPanel"
 import JourneyTimeline from "../components/JourneyTimeline"
+import ForgottenWorkshopPanel from "../components/ForgottenWorkshopPanel"
 
 /**
  * Navigation Entry: Single Source of Truth for all nav + map data.
@@ -115,6 +117,19 @@ export const navigationEntries: NavigationEntry[] = [
     panelComponent: ContactPanel,
     panelTitle: "The Gateway",
     panelVariant: "hud",
+  },
+  {
+    id: "forgotten-workshop",
+    label: "Forgotten Workshop",
+    navLabel: "Forgotten",
+    icon: ArchiveX,
+    x: 75,
+    y: 60,
+    color: "#d4a574",
+    showInSidebar: false,
+    panelComponent: ForgottenWorkshopPanel,
+    panelTitle: "Forgotten Workshop",
+    panelVariant: "parchment",
   },
 ]
 

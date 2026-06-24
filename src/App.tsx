@@ -32,6 +32,13 @@ export default function App() {
     }
   }
 
+  const handleForgottenProjectClick = (projectId: string) => {
+    // Visiting forgotten workshop unlocks an achievement
+    if (!isUnlocked("archaeologist")) {
+      unlockAchievement("archaeologist")
+    }
+  }
+
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-void text-ink">
       {/* World / isometric scene with avatar navigation */}
@@ -58,7 +65,9 @@ export default function App() {
           const extraProps =
             active === "projects"
               ? { onProjectClick: handleProjectClick }
-              : entry.props ?? {}
+              : active === "forgotten-workshop"
+                ? { onProjectClick: handleForgottenProjectClick }
+                : entry.props ?? {}
           return (
             <PanelShell
               key={active}

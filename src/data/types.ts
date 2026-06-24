@@ -1,4 +1,4 @@
-export type Section = "about" | "projects" | "contact" | "journey"
+export type Section = "about" | "projects" | "contact" | "journey" | "forgotten-workshop"
 
 export type JourneyMilestone = {
   id: string
