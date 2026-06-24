@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { TerminalSquare, X } from "lucide-react"
-import { character, quests, loot } from "../data"
+import { character, quests, loot, forgottenProjects } from "../data"
 import { useAchievements } from "../hooks/useAchievements"
 import ResumeModal from "./ResumeModal"
 import { ACHIEVEMENTS } from "../types/achievements"
@@ -72,15 +72,16 @@ export default function Terminal() {
       case "help":
         push([
           mkLine("system", "Available commands:"),
-          mkLine("output", "  /help          Returns available commands."),
-          mkLine("output", "  /about         Shows character sheet."),
-          mkLine("output", "  /projects      Lists projects in quest log."),
-          mkLine("output", "  /contact       Shows contact information."),
-          mkLine("output", "  /resume        Unlock the professional resume (DLC)."),
-          mkLine("output", "  /skills        Displays attribute stats."),
-          mkLine("output", "  /achievements  Shows all achievements."),
-          mkLine("output", "  /whoami        Prints current identity."),
-          mkLine("output", "  /clear         Clears the terminal."),
+          mkLine("output", "  /help               Returns available commands."),
+          mkLine("output", "  /about              Shows character sheet."),
+          mkLine("output", "  /projects           Lists projects in quest log."),
+          mkLine("output", "  /projects deleted   Shows unreleased/abandoned/cancelled projects."),
+          mkLine("output", "  /contact            Shows contact information."),
+          mkLine("output", "  /resume             Unlock the professional resume (DLC)."),
+          mkLine("output", "  /skills             Displays attribute stats."),
+          mkLine("output", "  /achievements       Shows all achievements."),
+          mkLine("output", "  /whoami             Prints current identity."),
+          mkLine("output", "  /clear              Clears the terminal."),
         ])
         break
 
@@ -185,6 +186,27 @@ export default function Terminal() {
         push([
           mkLine("success", "All achievements unlocked!"),
           mkLine("system", "Achievement mastery acquired."),
+        ])
+        break
+      }
+
+      case "projects deleted": {
+        const statusColorMap: Record<string, string> = {
+          abandoned: "var(--accent-purple)",
+          cancelled: "var(--accent-cyan)",
+          lost: "var(--ink-soft)",
+          prototype: "var(--accent-gold)",
+        }
+        const projectLines = forgottenProjects.flatMap((p) => [
+          mkLine("output", `  [${p.status.toUpperCase()}] ${p.title} (${p.year})`),
+          mkLine("output", `      ${p.summary}`),
+          mkLine("output", `      Tech: ${p.tech.join(", ")}`),
+        ])
+        push([
+          mkLine("system", `=== FORGOTTEN ARCHIVE — ${forgottenProjects.length} unreleased projects ===`),
+          mkLine("system", "These projects were abandoned, cancelled, or remain prototypes."),
+          ...projectLines,
+          mkLine("system", "Navigate to the Forgotten Workshop on the map to explore details."),
         ])
         break
       }

@@ -4,7 +4,7 @@ import { X, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import type { ForgottenProject } from "../data/forgottenProjects"
 import { OptimizedImage, OptimizedVideo } from "./OptimizedImage"
 
-type TabType = "overview" | "reason" | "lessons"
+type TabType = "overview" | "challenges" | "reason" | "lessons"
 
 const statusColors: Record<string, { badge: string; accent: string }> = {
   abandoned: { badge: "var(--accent-gold)", accent: "text-yellow-600" },
@@ -34,6 +34,7 @@ export default function ForgottenWorkshopModal({
   // Tabs show based on content
   const tabs: { id: TabType; label: string; content: boolean }[] = [
     { id: "overview", label: "Overview", content: true },
+    { id: "challenges", label: "Technical Challenges", content: !!project?.techChallenges },
     { id: "reason", label: "Why Abandoned", content: !!project?.reasonAbandoned },
     { id: "lessons", label: "Lessons", content: !!project?.lessonsLearned && project.lessonsLearned.length > 0 },
   ].filter((t) => t.content)
@@ -260,6 +261,22 @@ export default function ForgottenWorkshopModal({
                         </p>
                       </div>
                     )}
+                  </motion.div>
+                )}
+
+                {/* TAB: Technical Challenges */}
+                {activeTab === "challenges" && project.techChallenges && (
+                  <motion.div
+                    key="challenges"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <h4 className="font-serif text-sm font-bold mb-3" style={{ color: statusColor.badge }}>
+                      Technical Challenges
+                    </h4>
+                    <p className="text-sm leading-relaxed text-ink-soft">{project.techChallenges}</p>
                   </motion.div>
                 )}
 
