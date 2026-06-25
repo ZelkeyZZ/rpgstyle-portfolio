@@ -1,20 +1,23 @@
 import { useState } from "react"
 import { AnimatePresence } from "framer-motion"
-import type { Section } from "./data"
+import type { Section, Quest } from "./data"
 import { useTheme } from "./useTheme"
 import { useAchievements } from "./hooks/useAchievements"
 import Scene from "./components/Scene"
 import SideNav from "./components/SideNav"
 import ThemeToggle from "./components/ThemeToggle"
 import HeroHud from "./components/HeroHud"
+import CurrentQuestHud from "./components/CurrentQuestHud"
 import PanelShell from "./components/PanelShell"
 import Terminal from "./components/Terminal"
+import QuestModal from "./components/QuestModal"
 import { panelRegistry } from "./config/panelRegistry"
 
 export default function App() {
   const { isDark, toggle } = useTheme()
   const { unlockAchievement, isUnlocked } = useAchievements()
   const [active, setActive] = useState<Section | null>(null)
+  const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null)
 
   const handleProjectClick = (projectId: string, projectTitle: string) => {
     // Project-specific achievements
@@ -47,6 +50,12 @@ export default function App() {
       {/* Top-left identity HUD */}
       <HeroHud isDark={isDark} />
 
+      {/* Current Quest Tracker HUD */}
+      <CurrentQuestHud onQuestClick={(quest) => {
+        setSelectedQuest(quest)
+        handleProjectClick(quest.id, quest.title)
+      }} />
+
       {/* Theme toggle */}
       <ThemeToggle isDark={isDark} onToggle={toggle} />
 
@@ -56,6 +65,9 @@ export default function App() {
       {/* Interactive command terminal */}
       <Terminal />
 
+      {/* Quest detail modal — from CurrentQuestHud or ProjectsPanel click */}
+      <QuestModal quest={selectedQuest} onClose={() => setSelectedQuest(null)} />
+
       {/* Content panels — driven by panelRegistry */}
       <AnimatePresence mode="wait">
         {active && (() => {
@@ -64,7 +76,7 @@ export default function App() {
           const PanelComponent = entry.component
           const extraProps =
             active === "projects"
-              ? { onProjectClick: handleProjectClick }
+              ? { onProjectClick: handleProjectClick, onQuestSelect: setSelectedQuest }
               : active === "forgotten-workshop"
                 ? { onProjectClick: handleForgottenProjectClick }
                 : entry.props ?? {}
