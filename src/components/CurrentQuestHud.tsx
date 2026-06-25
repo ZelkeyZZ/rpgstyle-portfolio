@@ -10,23 +10,9 @@ interface CurrentQuestHudProps {
 
 const CurrentQuestHud = memo(function CurrentQuestHud({ onQuestClick }: CurrentQuestHudProps) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [autoCollapseTimer, setAutoCollapseTimer] = useState<NodeJS.Timeout | null>(null)
 
   // Derived state: filter incomplete quests
   const activeQuests = quests.filter((q) => !q.completed)
-
-  // Reset auto-collapse timer on interaction
-  const resetAutoCollapseTimer = useCallback(() => {
-    if (autoCollapseTimer) clearTimeout(autoCollapseTimer)
-    
-    if (isExpanded) {
-      const timer = setTimeout(() => {
-        setIsExpanded(false)
-      }, 8000) // 8 second auto-collapse
-      
-      setAutoCollapseTimer(timer)
-    }
-  }, [isExpanded, autoCollapseTimer])
 
   // Handle quest click
   const handleQuestClick = useCallback((quest: Quest) => {
@@ -37,8 +23,7 @@ const CurrentQuestHud = memo(function CurrentQuestHud({ onQuestClick }: CurrentQ
   // Handle toggle
   const handleToggle = useCallback(() => {
     setIsExpanded((prev) => !prev)
-    resetAutoCollapseTimer()
-  }, [resetAutoCollapseTimer])
+  }, [])
 
   // Handle escape key
   useEffect(() => {
@@ -54,17 +39,17 @@ const CurrentQuestHud = memo(function CurrentQuestHud({ onQuestClick }: CurrentQ
 
   // Auto-collapse timer effect
   useEffect(() => {
-    if (isExpanded) {
-      resetAutoCollapseTimer()
-    }
+    if (!isExpanded) return
+
+    const timer = setTimeout(() => {
+      setIsExpanded(false)
+    }, 8000) // 8 second auto-collapse
     
-    return () => {
-      if (autoCollapseTimer) clearTimeout(autoCollapseTimer)
-    }
+    return () => clearTimeout(timer)
   }, [isExpanded])
 
   return (
-    <div className="absolute left-3 top-20 z-30 md:left-5 md:top-24">
+    <div className="absolute left-3 top-50 z-30 md:left-5 md:top-54">
       {/* Minimized Button */}
       <AnimatePresence mode="wait">
         {!isExpanded && (
