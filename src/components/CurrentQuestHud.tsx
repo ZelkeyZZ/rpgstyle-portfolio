@@ -64,7 +64,7 @@ const CurrentQuestHud = memo(function CurrentQuestHud({ onQuestClick }: CurrentQ
   }, [isExpanded])
 
   return (
-    <div className="absolute bottom-5 right-5 z-30 md:bottom-8 md:right-8">
+    <div className="absolute left-3 top-20 z-30 md:left-5 md:top-24">
       {/* Minimized Button */}
       <AnimatePresence mode="wait">
         {!isExpanded && (
@@ -92,12 +92,12 @@ const CurrentQuestHud = memo(function CurrentQuestHud({ onQuestClick }: CurrentQ
         {isExpanded && (
           <motion.div
             key="expanded"
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            initial={{ scale: 0.9, opacity: 0, y: -10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            exit={{ scale: 0.9, opacity: 0, y: -10 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             onClick={(e) => e.stopPropagation()}
-            className="hud-panel clip-bevel absolute -top-full right-0 mb-2 max-h-96 w-72 max-w-[calc(100vw-2rem)] overflow-hidden flex flex-col md:w-80"
+            className="hud-panel clip-bevel absolute top-full left-0 mt-2 max-h-96 w-72 max-w-[calc(100vw-1.5rem)] overflow-hidden flex flex-col md:w-80"
             style={{ borderColor: "var(--panel-edge)" }}
           >
             {/* Header with Close Button */}
