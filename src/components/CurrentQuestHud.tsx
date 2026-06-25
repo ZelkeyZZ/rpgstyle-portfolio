@@ -16,7 +16,7 @@ export default function CurrentQuestHud({ onQuestClick }: CurrentQuestHudProps) 
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.3, type: "spring", stiffness: 180, damping: 20 }}
-      className="hud-panel clip-bevel absolute left-3 top-24 z-30 max-w-[calc(100vw-6rem)] px-3 py-2 md:left-5 md:top-32 md:max-w-sm md:px-4 md:py-3"
+      className="hud-panel clip-bevel absolute left-1/2 top-1/3 z-30 -translate-x-1/2 max-w-xs px-3 py-2 md:max-w-sm md:px-4 md:py-3"
       style={{ maxHeight: "calc(100vh - 200px)", overflowY: "auto" }}
     >
       {/* Header */}
@@ -25,7 +25,7 @@ export default function CurrentQuestHud({ onQuestClick }: CurrentQuestHudProps) 
           // QUEST LOG
         </p>
         <h2 className="font-serif text-sm font-bold text-gold md:text-base">
-          CURRENT QUESTS
+          Current Objectives
           {activeQuests.length > 0 && <span className="text-ink-soft"> ({activeQuests.length})</span>}
         </h2>
       </div>
