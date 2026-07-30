@@ -1,24 +1,12 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { X, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
+import { X, ChevronDown } from "lucide-react"
 import type { ForgottenProject } from "../data/forgottenProjects"
-import { OptimizedImage, OptimizedVideo } from "./OptimizedImage"
+import { STATUS_COLORS } from "../constants/statusConfig"
+import ModalTabs from "./ModalTabs"
+import MediaGallery from "./MediaGallery"
 
 type TabType = "overview" | "challenges" | "reason" | "lessons"
-
-const statusColors: Record<string, { badge: string; accent: string }> = {
-  abandoned: { badge: "var(--accent-gold)", accent: "text-yellow-600" },
-  cancelled: { badge: "var(--accent-purple)", accent: "text-purple-600" },
-  lost: { badge: "#888888", accent: "text-gray-500" },
-  prototype: { badge: "var(--accent-cyan)", accent: "text-cyan-600" },
-}
-
-const statusLabels: Record<string, string> = {
-  abandoned: "ABANDONED",
-  cancelled: "CANCELLED",
-  lost: "LOST SOURCE",
-  prototype: "PROTOTYPE",
-}
 
 export default function ForgottenWorkshopModal({
   project,
@@ -48,7 +36,7 @@ export default function ForgottenWorkshopModal({
 
   if (!project) return null
 
-  const statusColor = statusColors[project.status]
+  const statusColor = STATUS_COLORS[project.status]
   const media = project.evidence?.media ?? []
   const hasMedia = media.length > 0
   const notes = project.evidence?.notes ?? []
@@ -86,7 +74,7 @@ export default function ForgottenWorkshopModal({
                     className="px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-wider rounded border"
                     style={{ color: statusColor.badge, borderColor: statusColor.badge }}
                   >
-                    {statusLabels[project.status]}
+                    {statusColor.label}
                   </span>
                   <span className="font-mono text-[9px] uppercase tracking-wider text-ink-soft">{project.year}</span>
                 </div>
@@ -104,23 +92,12 @@ export default function ForgottenWorkshopModal({
 
             {/* tab navigation */}
             {tabs.length > 1 && (
-              <div
-                className="flex gap-0 border-b overflow-x-auto px-4 py-0"
-                style={{ borderColor: "var(--panel-edge)" }}
-              >
-                {tabs.map((tab) => (
-                  <motion.button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className="relative px-3 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b-2 transition-colors"
-                    style={{
-                      borderColor: activeTab === tab.id ? statusColor.badge : "transparent",
-                      color: activeTab === tab.id ? statusColor.badge : "var(--ink-soft)",
-                    }}
-                  >
-                    {tab.label}
-                  </motion.button>
-                ))}
+              <div className="px-4">
+                <ModalTabs
+                  tabs={tabs}
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
               </div>
             )}
 
@@ -156,84 +133,13 @@ export default function ForgottenWorkshopModal({
 
                     {/* media gallery */}
                     {hasMedia && (
-                      <div className="mt-4 space-y-3">
-                        <div
-                          className="relative overflow-hidden rounded-md border"
-                          style={{ borderColor: "var(--panel-edge)", background: "color-mix(in srgb,#000 35%,transparent)" }}
-                        >
-                          <div className="relative aspect-video w-full">
-                            {currentMedia?.type === "video" ? (
-                              <OptimizedVideo
-                                key={`video-${currentMedia.src}`}
-                                src={currentMedia.src}
-                                className="h-full w-full object-cover"
-                                preload="metadata"
-                              />
-                            ) : (
-                              <OptimizedImage
-                                key={`image-${currentMedia?.src}`}
-                                src={currentMedia?.src ?? ""}
-                                alt={currentMedia?.caption ?? `${project.title} screenshot`}
-                                className="h-full w-full object-cover"
-                                quality="high"
-                              />
-                            )}
-
-                            {media.length > 1 && (
-                              <>
-                                <button
-                                  onClick={() => setMediaIndex((i) => (i - 1 + media.length) % media.length)}
-                                  className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
-                                  style={{
-                                    borderColor: "var(--panel-edge)",
-                                    background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
-                                    color: "var(--ink)",
-                                  }}
-                                  aria-label="Previous media"
-                                >
-                                  <ChevronLeft size={16} />
-                                </button>
-                                <button
-                                  onClick={() => setMediaIndex((i) => (i + 1) % media.length)}
-                                  className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
-                                  style={{
-                                    borderColor: "var(--panel-edge)",
-                                    background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
-                                    color: "var(--ink)",
-                                  }}
-                                  aria-label="Next media"
-                                >
-                                  <ChevronRight size={16} />
-                                </button>
-                              </>
-                            )}
-                          </div>
-
-                          {currentMedia?.caption && (
-                            <p className="border-t px-3 py-2 font-mono text-[11px] text-ink-soft" style={{ borderColor: "var(--panel-edge)" }}>
-                              {currentMedia.caption}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* media dots */}
-                        {media.length > 1 && (
-                          <div className="flex items-center justify-center gap-2">
-                            {media.map((_, i) => (
-                              <button
-                                key={`dot-${i}`}
-                                onClick={() => setMediaIndex(i)}
-                                className="h-2 rounded-full transition-all"
-                                style={{
-                                  width: i === mediaIndex ? 20 : 8,
-                                  background: i === mediaIndex ? statusColor.badge : "var(--panel-edge)",
-                                  boxShadow: i === mediaIndex ? `0 0 8px ${statusColor.badge}` : "none",
-                                }}
-                                aria-label={`Go to media ${i + 1}`}
-                              />
-                            ))}
-                          </div>
-                        )}
+                      <div className="mt-4">
+                        <MediaGallery
+                          media={media}
+                          currentIndex={mediaIndex}
+                          onIndexChange={setMediaIndex}
+                          accentColor={statusColor.badge}
+                        />
                       </div>
                     )}
 

@@ -1,24 +1,16 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { forgottenProjects } from "../data/forgottenProjects"
+import { STATUS_COLORS } from "../constants/statusConfig"
 import ForgottenWorkshopModal from "./ForgottenWorkshopModal"
+import type { ForgottenProject } from "../data/forgottenProjects"
 
-const statusColors: Record<string, { badge: string }> = {
-  abandoned: { badge: "var(--accent-gold)" },
-  cancelled: { badge: "var(--accent-purple)" },
-  lost: { badge: "#888888" },
-  prototype: { badge: "var(--accent-cyan)" },
+interface ForgottenWorkshopPanelProps {
+  onProjectClick?: (projectId: string) => void
 }
 
-const statusLabels: Record<string, string> = {
-  abandoned: "ABANDONED",
-  cancelled: "CANCELLED",
-  lost: "LOST",
-  prototype: "PROTOTYPE",
-}
-
-export default function ForgottenWorkshopPanel() {
-  const [selectedProject, setSelectedProject] = useState(null)
+export default function ForgottenWorkshopPanel({ onProjectClick }: ForgottenWorkshopPanelProps) {
+  const [selectedProject, setSelectedProject] = useState<ForgottenProject | null>(null)
 
   return (
     <div className="space-y-6">
@@ -33,14 +25,17 @@ export default function ForgottenWorkshopPanel() {
       {/* Projects grid */}
       <div className="space-y-3">
         {forgottenProjects.map((project, i) => {
-          const statusColor = statusColors[project.status]
+          const statusColor = STATUS_COLORS[project.status]
           return (
             <motion.button
               key={project.id}
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              onClick={() => setSelectedProject(project)}
+              onClick={() => {
+                setSelectedProject(project)
+                onProjectClick?.(project.id)
+              }}
               className="w-full text-left p-3 rounded border transition-all hover:scale-102"
               style={{
                 borderColor: "var(--panel-edge)",
@@ -57,7 +52,7 @@ export default function ForgottenWorkshopPanel() {
                     className="px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider rounded border"
                     style={{ color: statusColor.badge, borderColor: statusColor.badge }}
                   >
-                    {statusLabels[project.status]}
+                    {statusColor.label}
                   </span>
                   <span className="font-mono text-[9px] text-ink-soft">{project.year}</span>
                 </div>

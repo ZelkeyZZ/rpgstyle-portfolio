@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { X, ExternalLink, ChevronLeft, ChevronRight, Sparkles, FolderGit2, Lock, ChevronDown } from "lucide-react"
+import { X, ExternalLink, Sparkles, FolderGit2, Lock, ChevronDown } from "lucide-react"
 import type { Quest } from "../data"
-import { OptimizedImage, OptimizedVideo } from "./OptimizedImage"
+import ModalTabs from "./ModalTabs"
+import MediaGallery from "./MediaGallery"
 
 type TabType = "overview" | "challenge" | "solution" | "architecture" | "lessons"
 
@@ -91,23 +92,12 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
 
             {/* tab navigation */}
             {tabs.length > 1 && (
-              <div
-                className="flex gap-0 border-b overflow-x-auto px-4 py-0"
-                style={{ borderColor: "var(--panel-edge)" }}
-              >
-                {tabs.map((tab) => (
-                  <motion.button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className="relative px-3 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b-2 transition-colors"
-                    style={{
-                      borderColor: activeTab === tab.id ? quest!.rankColor : "transparent",
-                      color: activeTab === tab.id ? quest!.rankColor : "var(--ink-soft)",
-                    }}
-                  >
-                    {tab.label}
-                  </motion.button>
-                ))}
+              <div className="px-4">
+                <ModalTabs
+                  tabs={tabs}
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
               </div>
             )}
 
@@ -123,83 +113,12 @@ export default function QuestModal({ quest, onClose }: { quest: Quest | null; on
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div
-                      className="relative overflow-hidden rounded-md border"
-                      style={{ borderColor: "var(--panel-edge)", background: "color-mix(in srgb,#000 35%,transparent)" }}
-                    >
-                      <div className="relative aspect-video w-full">
-                        {current.type === "video" ? (
-                          <OptimizedVideo
-                            key={`video-${current.src}`}
-                            src={current.src}
-                            className="h-full w-full object-cover"
-                            preload="metadata"
-                          />
-                        ) : (
-                          <OptimizedImage
-                            key={`image-${current.src}`}
-                            src={current.src}
-                            alt={current.caption ?? `${quest.title} screenshot ${index + 1}`}
-                            className="h-full w-full object-cover"
-                            quality="high"
-                          />
-                        )}
-
-                        {media.length > 1 && (
-                          <>
-                            <button
-                              onClick={() => setIndex((i) => (i - 1 + media.length) % media.length)}
-                              className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
-                              style={{
-                                borderColor: "var(--panel-edge)",
-                                background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
-                                color: "var(--ink)",
-                              }}
-                              aria-label="Previous media"
-                            >
-                              <ChevronLeft size={16} />
-                            </button>
-                            <button
-                              onClick={() => setIndex((i) => (i + 1) % media.length)}
-                              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm"
-                              style={{
-                                borderColor: "var(--panel-edge)",
-                                background: "color-mix(in srgb, var(--bg-void) 60%, transparent)",
-                                color: "var(--ink)",
-                              }}
-                              aria-label="Next media"
-                            >
-                              <ChevronRight size={16} />
-                            </button>
-                          </>
-                        )}
-                      </div>
-
-                      {current.caption && (
-                        <p className="border-t px-3 py-2 font-mono text-[11px] text-ink-soft" style={{ borderColor: "var(--panel-edge)" }}>
-                          {current.caption}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* thumbnail dots - only show on overview tab */}
-                    {media.length > 1 && (
-                      <div className="mt-3 flex items-center justify-center gap-2">
-                        {media.map((_, i) => (
-                          <button
-                            key={`dot-${i}`}
-                            onClick={() => setIndex(i)}
-                            className="h-2 rounded-full transition-all"
-                            style={{
-                              width: i === index ? 20 : 8,
-                              background: i === index ? quest.rankColor : "var(--panel-edge)",
-                              boxShadow: i === index ? `0 0 8px ${quest.rankColor}` : "none",
-                            }}
-                            aria-label={`Go to media ${i + 1}`}
-                          />
-                        ))}
-                      </div>
-                    )}
+                    <MediaGallery
+                      media={media}
+                      currentIndex={index}
+                      onIndexChange={setIndex}
+                      accentColor={quest.rankColor}
+                    />
                   </motion.div>
                 )}
 
