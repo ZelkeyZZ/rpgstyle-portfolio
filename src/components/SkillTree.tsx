@@ -249,7 +249,7 @@ const SKILL_TREE: Skill[] = [
     icon: Cpu,
     category: "system",
     proficiency: "intermediate",
-    experience: "Since 2017 — 9 years",
+    experience: "Since 2015 — 11 years",
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
     prerequisites: [],
