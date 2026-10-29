@@ -121,7 +121,7 @@ const SKILL_TREE: Skill[] = [
     icon: Server,
     category: "backend",
     proficiency: "advanced",
-    experience: "Since 2015 — 8 years",
+    experience: "Since 2015 — 11 years",
     projects: ["ICCES", "Private Server"],
     yearIntroduced: 2015,
     prerequisites: [],
