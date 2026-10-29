@@ -248,7 +248,7 @@ const SKILL_TREE: Skill[] = [
     name: "PC Hardware",
     icon: Cpu,
     category: "system",
-    proficiency: "intermediate",
+    proficiency: "advanced",
     experience: "Since 2015 — 11 years",
     projects: ["PC Building", "Troubleshooting"],
     yearIntroduced: 2017,
