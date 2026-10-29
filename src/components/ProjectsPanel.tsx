@@ -1,20 +1,18 @@
-import { useState } from "react"
 import { motion } from "framer-motion"
 import { CheckCircle2, MinusCircle, Sparkles, ImageIcon, Lock } from "lucide-react"
 import { quests, type Quest } from "../data"
-import QuestModal from "./QuestModal"
 
 interface ProjectsPanelProps {
   onProjectClick?: (projectId: string, projectTitle: string) => void
+  onQuestSelect?: (quest: Quest) => void
 }
 
-export default function ProjectsPanel({ onProjectClick }: ProjectsPanelProps) {
-  const [active, setActive] = useState<Quest | null>(null)
+export default function ProjectsPanel({ onProjectClick, onQuestSelect }: ProjectsPanelProps) {
   const totalQuests = quests.length
   const completedQuests = quests.filter((q) => q.completed).length
 
   const handleProjectClick = (q: Quest) => {
-    setActive(q)
+    onQuestSelect?.(q)
     onProjectClick?.(q.id, q.title)
   }
 
@@ -97,13 +95,8 @@ export default function ProjectsPanel({ onProjectClick }: ProjectsPanelProps) {
               {q.media?.length ?? 0} screenshots {q.repo ? "· repo available" : "· sealed repo"} → inspect
             </div>
           </motion.article>
-        ))}
+          ))}
       </div>
-      <p className="mt-5 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
-        Hint: glitching nodes on the map hold corrupted secrets...
-      </p>
-
-      <QuestModal quest={active} onClose={() => setActive(null)} />
     </div>
   )
 }

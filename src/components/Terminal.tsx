@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { TerminalSquare, X } from "lucide-react"
-import { character, quests, loot } from "../data"
+import { character, quests, loot, forgottenProjects } from "../data"
 import { useAchievements } from "../hooks/useAchievements"
 import ResumeModal from "./ResumeModal"
 import { ACHIEVEMENTS } from "../types/achievements"
@@ -35,6 +35,7 @@ export default function Terminal() {
   const [history, setHistory] = useState<string[]>([])
   const [histIndex, setHistIndex] = useState<number | null>(null)
   const [resumeOpen, setResumeOpen] = useState(false)
+  const { getAllAchievements, getUnlockedCount, unlockAchievement } = useAchievements()
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -71,14 +72,16 @@ export default function Terminal() {
       case "help":
         push([
           mkLine("system", "Available commands:"),
-          mkLine("output", "  /help      Returns available commands."),
-          mkLine("output", "  /about     Shows character sheet."),
-          mkLine("output", "  /projects  Lists projects in quest log."),
-          mkLine("output", "  /contact   Shows contact information."),
-          mkLine("output", "  /resume    Unlock the professional resume (DLC)."),
-          mkLine("output", "  /skills    Displays attribute stats."),
-          mkLine("output", "  /whoami    Prints current identity."),
-          mkLine("output", "  /clear     Clears the terminal."),
+          mkLine("output", "  /help               Returns available commands."),
+          mkLine("output", "  /about              Shows character sheet."),
+          mkLine("output", "  /projects           Lists projects in quest log."),
+          mkLine("output", "  /projects deleted   Shows unreleased/abandoned/cancelled projects."),
+          mkLine("output", "  /contact            Shows contact information."),
+          mkLine("output", "  /resume             Unlock the professional resume (DLC)."),
+          mkLine("output", "  /skills             Displays attribute stats."),
+          mkLine("output", "  /achievements       Shows all achievements."),
+          mkLine("output", "  /whoami             Prints current identity."),
+          mkLine("output", "  /clear              Clears the terminal."),
         ])
         break
 
@@ -158,6 +161,50 @@ export default function Terminal() {
         setLines([])
         break
 
+      case "achievements": {
+        const achievements = getAllAchievements()
+        const unlockedCount = getUnlockedCount()
+        const achievementLines = achievements.map((a) => {
+          const status = a.unlockedAt ? "[✓]" : "[ ]"
+          return mkLine(a.unlockedAt ? "success" : "output", `${status} ${a.icon} ${a.name}`)
+        })
+        push([
+          mkLine(
+            "system",
+            `=== ACHIEVEMENTS — ${unlockedCount}/${achievements.length} unlocked ===`,
+          ),
+          ...achievementLines,
+        ])
+        break
+      }
+
+      case "achievements unlock": {
+        const achievements = getAllAchievements()
+        achievements.forEach((a) => {
+          unlockAchievement(a.id as any)
+        })
+        push([
+          mkLine("success", "All achievements unlocked!"),
+          mkLine("system", "Achievement mastery acquired."),
+        ])
+        break
+      }
+
+      case "projects deleted": {
+        const projectLines = forgottenProjects.flatMap((p) => [
+          mkLine("output", `  [${p.status.toUpperCase()}] ${p.title} (${p.year})`),
+          mkLine("output", `      ${p.summary}`),
+          mkLine("output", `      Tech: ${p.technologies.join(", ")}`),
+        ])
+        push([
+          mkLine("system", `=== FORGOTTEN ARCHIVE — ${forgottenProjects.length} unreleased projects ===`),
+          mkLine("system", "These projects were abandoned, cancelled, or remain prototypes."),
+          ...projectLines,
+          mkLine("system", "Navigate to the Forgotten Workshop on the map to explore details."),
+        ])
+        break
+      }
+
       default:
         push([
           mkLine("error", `command not found: ${cmd}`),
@@ -220,8 +267,8 @@ export default function Terminal() {
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 30, opacity: 0, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 240, damping: 24 }}
-            className="hud-panel scanlines absolute bottom-16 left-3 z-40 flex h-[60vh] max-h-[460px] w-[92vw] max-w-md flex-col overflow-hidden rounded-lg md:bottom-20 md:left-5"
-            style={{ borderColor: "var(--accent-cyan)" }}
+            className="hud-panel scanlines absolute bottom-14 left-3 right-3 z-40 flex max-h-[calc(100vh-120px)] flex-col overflow-hidden rounded-lg md:bottom-20 md:left-5 md:right-auto md:w-96"
+            style={{ borderColor: "var(--accent-cyan)", height: "50vh" }}
             onClick={() => inputRef.current?.focus()}
           >
             {/* title bar */}
@@ -249,7 +296,7 @@ export default function Terminal() {
             </div>
 
             {/* output */}
-            <div ref={scrollRef} className="codex-scroll flex-1 overflow-y-auto px-3 py-2 font-mono text-xs leading-relaxed">
+            <div ref={scrollRef} className="codex-scroll flex-1 overflow-y-auto px-2 py-2 font-mono text-[11px] leading-relaxed md:px-3 md:text-xs">
               {lines.map((l) => (
                 <p key={l.id} className="whitespace-pre-wrap break-words" style={{ color: lineColor[l.kind] }}>
                   {l.text}
@@ -259,7 +306,7 @@ export default function Terminal() {
 
             {/* input line */}
             <div
-              className="flex items-center gap-2 border-t px-3 py-2 font-mono text-xs"
+              className="flex items-center gap-2 border-t px-2 py-2 font-mono text-[11px] md:px-3 md:text-xs"
               style={{ borderColor: "var(--panel-edge)" }}
             >
               <span className="shrink-0 text-cyan">{PROMPT}</span>
